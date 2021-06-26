@@ -80,8 +80,11 @@ staticDir = ["static"]
       weight = 3
 
 [params]
-  about = "Hello !!!"
+  about = "Sebastian Aburto's blog"
+  description = "Content about programming and software development in general"
   version = "0.2.X"
+  gitRepo = "https://github.com/saburto/saburto.github.io"
+  dateFormat = 2006-01-02
 
 [params.home.profile]
   enable = true
@@ -129,6 +132,11 @@ staticDir = ["static"]
   enable = true
   custom = 'Exported with love from Org mode - <a href=https://github.com/kaushalmodi/ox-hugo>ox-hugo</a>'
   since = 2021
+
+[params.section]
+  paginate = 10
+  dateFormat = "January 2006"
+  rss = 10
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
