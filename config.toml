@@ -138,6 +138,11 @@ staticDir = ["static"]
   dateFormat = "January 2006"
   rss = 10
 
+[params.analytics]
+  enable = true
+  [params.analytics.google]
+    id = "G-LM76HVKGTY"
+
 [outputs]
   home = ["HTML", "RSS", "JSON"]
   page = ["HTML"]
