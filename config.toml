@@ -143,6 +143,9 @@ staticDir = ["static"]
   [params.analytics.google]
     id = "G-LM76HVKGTY"
 
+[params.cdn]
+  data = "jsdelivr.yml"
+
 [outputs]
   home = ["HTML", "RSS", "JSON"]
   page = ["HTML"]
