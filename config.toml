@@ -1,0 +1,138 @@
+baseURL = "http://example.org/"
+
+defaultContentLanguage = "en"
+title = "Seba's blog"
+
+theme = "LoveIt"
+
+staticDir = ["static"]
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[languages]
+  [languages.en]
+    title = "Seba's blog"
+    languageCode = "en"
+    languageName = "English"
+    staticDir = ["static"]
+    weight = 1
+    [[languages.en.menu.main]]
+      identifier = "posts"
+      pre = ""
+      post = ""
+      url = "/posts/"
+      title = ""
+      weight = 1
+    [[languages.en.menu.main]]
+      identifier = "tags"
+      pre = ""
+      post = ""
+      name = "Tags"
+      url = "/tags/"
+      title = ""
+      weight = 2
+    [[languages.en.menu.main]]
+      identifier = "categories"
+      pre = ""
+      post = ""
+      name = "Categories"
+      url = "/categories/"
+      title = ""
+      weight = 3
+  [languages.es]
+    title = "El blog del Seba"
+    languageCode = "es"
+    languageName = "Español"
+    staticDir = ["static"]
+    weight = 2
+
+    [languages.es.params.home.profile]
+      enable = true
+      title = "Blog de Sebastian Aburto"
+      subtitle = "Posts sobre programación y desarrollo de software en general."
+      social = true
+      disclaimer = "El contenido en este sitio es mío y no necesariamente representa la posición, estratégica u opinión de mi actual empleador"
+      gravatarEmail = "seba.aburto@gmail.com"
+      typeit = true
+    [[languages.es.menu.main]]
+      identifier = "posts"
+      pre = ""
+      post = ""
+      url = "/posts/"
+      title = ""
+      weight = 1
+    [[languages.es.menu.main]]
+      identifier = "tags"
+      pre = ""
+      post = ""
+      name = "Tags"
+      url = "/tags/"
+      title = ""
+      weight = 2
+    [[languages.es.menu.main]]
+      identifier = "categories"
+      pre = ""
+      post = ""
+      name = "Categorias"
+      url = "/categories/"
+      title = ""
+      weight = 3
+
+[params]
+  about = "Hello !!!"
+  version = "0.2.X"
+
+[params.home.profile]
+  enable = true
+  title = "Sebastian Aburto's blog"
+  subtitle = "Content about programming and software development in general"
+  social = true
+  disclaimer = "The posts on this site are my own and don’t necessarily represent my current employer positions, strategies, or opinions."
+  gravatarEmail = "seba.aburto@gmail.com"
+  typeit = true
+
+
+[params.typeit]
+    speed = 50
+    cursorSpeed = 1000
+
+[params.social]
+  GitHub = "saburto"
+  Linkedin = "saburto"
+
+[params.search]
+  enable = true
+  type = "lunr"
+  contentLength = 4000
+  placeholder = ""
+  maxResultLength = 10
+  snippetLength = 30
+  highlightTag = "em"
+  absoluteURL = false
+
+[params.page.share]
+  enable = true
+  Twitter = true
+  Linkedin = true
+  HackerNews = true
+  Reddit = true
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+
+[author]
+  name = "Sebastian Aburto"
+
+[params.footer]
+  enable = true
+  custom = 'Exported with love from Org mode - <a href=https://github.com/kaushalmodi/ox-hugo>ox-hugo</a>'
+  since = 2021
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  page = ["HTML"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  taxonomyTerm = ["HTML"]
