@@ -6,7 +6,7 @@
 
 #+hugo_auto_set_lastmod: t
 
-#+hugo_draft: nil
+#+hugo_draft: t
 
 #+hugo_tags: first test
 #+hugo_categories: test posts

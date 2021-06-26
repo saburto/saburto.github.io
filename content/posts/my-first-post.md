@@ -1,10 +1,10 @@
 +++
 title = "Primer post"
 date = 2021-06-25
-lastmod = 2021-06-26T23:32:11+02:00
+lastmod = 2021-06-26T23:36:44+02:00
 tags = ["first", "test"]
 categories = ["test", "posts"]
-draft = false
+draft = true
 featuredImage = "/featured.jpg"
 featuredImagePreview = "/preview.jpg"
 [toc]
