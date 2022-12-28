@@ -1,0 +1,9 @@
+baseURL = "https://saburto.com/"
+languageCode = "en"
+
+title = "[ { Sebastian: Blog } ]"
+
+[author]
+name = "Sebastian Aburto"
+
+

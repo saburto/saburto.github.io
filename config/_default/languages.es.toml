@@ -1,0 +1,15 @@
+languageCode = "es"
+languageName = "Español"
+displayName = "🇪🇸"
+htmlCode = "es"
+weight = 2
+
+[author]
+  name = "Sebastian Aburto"
+  headline = "Blog sobre programación, desarrollo de software y otras hierbas ..."
+  image = "avatar.jpg"
+  links = [
+      { github = "https://github.com/saburto" },
+      { linkedin = "https://linkedin.com/in/saburto" },
+      { twitter = "https://twitter.com/saburto_m" }
+    ]
