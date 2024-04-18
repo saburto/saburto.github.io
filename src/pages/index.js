@@ -15,6 +15,23 @@ function HomepageHeader() {
           {siteConfig.title}
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <div className={styles.buttons}>
+          <Link
+            className={clsx("button button--secondary button--lg")}
+            to="/docs/til"
+          >
+            Today I Learned
+          </Link>
+        </div>
+        <br />
+        <div>
+          <Link
+            className={clsx("button button--secondary button--lg")}
+            to="/blog"
+          >
+            Blog
+          </Link>
+        </div>
       </div>
     </header>
   );
