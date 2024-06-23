@@ -44,6 +44,11 @@ const config = {
       "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
+        blog: {
+          showLastUpdateTime: true,
+          editUrl: "https://github.com/saburto/saburto.github.io/tree/main/",
+          editLocalizedFiles: true,
+        },
         docs: {
           sidebarPath: "./sidebars.js",
           // Please change this to your repo.

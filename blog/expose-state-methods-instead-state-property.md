@@ -5,7 +5,11 @@ slug: status-handling-domain-objects
 authors: [saburto]
 date: 2024-06-22T00:00
 tags: [oop, java, design-patterns, refactoring]
+
+hide_table_of_contents: false
 ---
+
+<BlogTOCMobile/>
 
 Let's explore how to implement status-based logic in a way that is both robust and easy to understand.
 
@@ -227,7 +231,7 @@ public class PendingStatusHandler implements StatusHandler {
 
 As you can see the handler is more complex, and could be even more complex and extensible in the future.
 
-#### Main benefits
+### Main benefits
 
 - **Open/Closed Principle (OCP):** New status handlers (representing new states) can be added without modifying the existing `Order` or `BusinessService` classes. This makes the system more flexible and easier to maintain as requirements evolve.
 - **Easy to Test:** The logic for each status is isolated in its own class, making unit testing straightforward.
