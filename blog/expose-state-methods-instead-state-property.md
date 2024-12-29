@@ -9,8 +9,6 @@ tags: [oop, java, design-patterns, refactoring]
 hide_table_of_contents: false
 ---
 
-<BlogTOCMobile/>
-
 Let's explore how to implement status-based logic in a way that is both robust and easy to understand.
 
 <!-- truncate -->
