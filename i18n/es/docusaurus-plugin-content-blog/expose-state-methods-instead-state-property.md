@@ -7,8 +7,6 @@ date: 2024-06-22T00:00
 tags: [oop, java, design-patterns, refactoring]
 ---
 
-<BlogTOCMobile/>
-
 En este artículo, exploraremos cómo implementar la lógica basada en el estado de una entidad de dominio de manera robusta y fácil de entender.
 
 <!-- truncate -->
