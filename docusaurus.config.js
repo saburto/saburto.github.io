@@ -119,8 +119,8 @@ const config = {
       },
       prism: {
         theme: prismThemes.github,
-        darkTheme: prismThemes.dracula,
-        additionalLanguages: ["java", "ini", "bash"],
+        darkTheme: prismThemes.oneDark,
+        additionalLanguages: ["java", "ini", "bash", "log", "diff"],
         magicComments: [
           {
             className: 'theme-code-block-highlighted-line',

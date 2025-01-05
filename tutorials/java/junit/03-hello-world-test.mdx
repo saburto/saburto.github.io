@@ -1,0 +1,167 @@
+---
+draft: true
+---
+
+# 03 - Hello, World! Test case
+
+The archityped created the following file:
+
+```java title=AppTest
+package com.saburto.tutorial.junit;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * Unit test for simple App.
+ */
+public class AppTest {
+
+    /**
+     * Rigorous Test :-)
+     */
+    @Test
+    public void shouldAnswerWithTrue() {
+        assertTrue(true);
+    }
+}
+
+```
+
+
+:::warning
+Junit 5 package is `org.junit.jupiter`.
+if you see the package `org.junit.Test` you are using Junit 4.
+:::
+
+
+## Test class name matters
+
+The name `AppTest` is important because maven surefire plugin will run all classes that match the following patterns [^1]:
+
+* `**/Test*.java`
+* `**/*Test.java`
+* `**/*Tests.java`
+* `**/*TestCase.java`
+
+For this tutorial we are using the **`**/*Test.java`** pattern.
+
+Example:
+
+src/**main**/java/com/foo/SomeFoo.java
+
+src/**test**/java/com/foo/SomeFoo**Test**.java
+
+
+## No need for `public` modifiers
+
+
+Althought this class name is correct is not necessary to use `public` modifier.
+
+import { useEffect, useState } from 'react'
+import { getHighlighter } from 'shiki'
+import { ShikiMagicMove } from 'shiki-magic-move/react'
+import {useColorMode} from '@docusaurus/theme-common';
+
+export function App(props) {
+  const {colorMode, setColorMode} = useColorMode();
+  const [code, setCode] = useState(props.oldCode)
+  const [highlighter, setHighlighter] = useState()
+
+  const theme = colorMode === 'light' ? 'github-light' : 'one-dark-pro'
+
+  useEffect(() => {
+    async function initializeHighlighter() {
+      const highlighter = await getHighlighter({
+        themes: [theme],
+        langs: ['java'],
+      })
+      setHighlighter(highlighter)
+    }
+    initializeHighlighter()
+  }, [])
+
+  function animate() {
+    setCode(props.newCode)
+  }
+
+  return (
+    <div>
+      {highlighter && (
+        <>
+          <ShikiMagicMove
+            lang="java"
+            theme={theme}
+            highlighter={highlighter}
+            code={code}
+            options={{ duration: 1800, stagger: 0.3, lineNumbers: false, containerStyle: false }}
+          />
+          <p>
+          <button onClick={animate}>Change</button>
+          </p>
+        </>
+      )}
+    </div>
+  )
+}
+
+<App oldCode="public class AppTest" newCode="class AppTest" />
+
+
+The `public` in the test case method is not necessary.
+
+<App oldCode={`@Test
+  public void shouldAnswerWithTrue() {
+      assertTrue(true);
+  }`}
+    newCode={`@Test
+  void shouldAnswerWithTrue() {
+      assertTrue(true);
+  }`}/>
+
+## Simple Test Cases
+
+The test cases are defined by:
+
+- The methods with the annotation `@Test`.
+- Return nothing (void) [^2]
+- Have not arguments [^2]
+
+This is a bare minimum test case:
+
+```java title="☕ src/test/java/com/saburto/tutorial/junit/AppTest.java"
+@Test
+void helloWorld() {
+}
+```
+
+If you run the tests again you will see that the test is green.
+
+```sh title="🖥️"
+mvn test
+```
+
+```log
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.saburto.tutorial.junit.AppTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in com.saburto.tutorial.junit.AppTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.878 s
+[INFO] Finished at: 2025-01-05T13:35:48+01:00
+[INFO] ------------------------------------------------------------------------
+```
+
+[^1]: More info here: [Maven Surefire Plugin](https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html#filtering-by-test-class-names-for-maven-surefire)
+[^2]: Later we will see more advanced test cases that recieved arguments and return values.
+
+

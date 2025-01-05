@@ -22,7 +22,9 @@
     "prism-react-renderer": "^2.4.1",
     "react": "^18.3.1",
     "react-confetti-explosion": "^2.1.2",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "shiki": "^1.26.1",
+    "shiki-magic-move": "^0.5.2"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.6.3",
