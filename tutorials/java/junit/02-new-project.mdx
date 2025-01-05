@@ -1,0 +1,223 @@
+---
+draft: true
+---
+
+# 02 - Create a new project
+
+Using [maven archetype quickstart](https://maven.apache.org/archetypes/maven-archetype-quickstart/) to create a new project:
+
+```sh
+mvn archetype:generate \
+  -DarchetypeGroupId=org.apache.maven.archetypes \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DarchetypeVersion=1.5 \
+  -DjavaCompilerVersion=21 \
+  -DjunitVersion=5.11.4 \
+  -DgroupId=com.saburto.tutorial \
+  -DartifactId=junit5-tutorial \
+  -Dversion=1.0-SNAPSHOT \
+  -Dpackage=com.saburto.tutorial.junit5 \
+  -DinteractiveMode=false
+```
+
+:::info
+
+In order to pass java properties you need to use `-D` before the property name.
+
+:::
+
+For this tutorial we are using the following properties:
+
+|Property|Description| Recommended value |
+|--|--|--|
+|`javaCompilerVersion`| Java version| 21|
+|`junitVersion`| Junit version| 5.11.4|
+|`groupId`| Group id of the project | com.saburto.tutorial|
+|`artifactId`| Artifact id of the project| junit5-tutorial|
+|`version` |Initial version| 1.0-SNAPSHOT|
+|`package` |Java package of the project| com.saburto.tutorial.junit5|
+|`interactiveMode`| Do not ask for confirmation| false|
+
+As an output of the command you will see something like this:
+
+```text
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------< org.apache.maven:standalone-pom >-------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] >>> archetype:3.3.1:generate (default-cli) > generate-sources @ standalone-pom >>>
+[INFO]
+[INFO] <<< archetype:3.3.1:generate (default-cli) < generate-sources @ standalone-pom <<<
+[INFO]
+[INFO]
+[INFO] --- archetype:3.3.1:generate (default-cli) @ standalone-pom ---
+[INFO] Generating project in Batch mode
+[INFO] Archetype repository not defined. Using the one from [org.apache.maven.archetypes:maven-archetype-quickstart:1.5] found in catalog remote
+[INFO] ----------------------------------------------------------------------------
+[INFO] Using following parameters for creating project from Archetype: maven-archetype-quickstart:1.5
+[INFO] ----------------------------------------------------------------------------
+[INFO] Parameter: groupId, Value: com.saburto.tutorial
+[INFO] Parameter: artifactId, Value: junit5-tutorial
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Parameter: package, Value: com.saburto.tutorial.junit
+[INFO] Parameter: packageInPathFormat, Value: com/saburto/tutorial/junit
+[INFO] Parameter: junitVersion, Value: 5.11.4
+[INFO] Parameter: package, Value: com.saburto.tutorial.junit
+[INFO] Parameter: groupId, Value: com.saburto.tutorial
+[INFO] Parameter: artifactId, Value: junit5-tutorial
+[INFO] Parameter: javaCompilerVersion, Value: 21
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[WARNING] Don't override file /home/saburto/git/junit5-tutorial/src/main/java/com/saburto/tutorial/junit
+[WARNING] Don't override file /home/saburto/git/junit5-tutorial/src/test/java/com/saburto/tutorial/junit
+[WARNING] CP Don't override file /home/saburto/git/junit5-tutorial/.mvn
+# highlight-next-success
+[INFO] Project created from Archetype in dir: /home/saburto/git/junit5-tutorial
+[INFO] ------------------------------------------------------------------------
+# highlight-next-success
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.765 s
+[INFO] Finished at: 2025-01-05T09:47:32+01:00
+[INFO] ------------------------------------------------------------------------
+```
+
+As you can see the project is created using the value of the `ArtifactId`, then go to the project directory:
+
+```sh
+cd junit5-tutorial
+```
+
+Let's see the file structure of the project:
+
+```text
+├── pom.xml
+└── src
+# highlight-next-success
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── saburto
+    │               └── tutorial
+    │                   └── junit
+    │                       └── App.java
+# highlight-next-success
+    └── test
+        └── java
+            └── com
+                └── saburto
+                    └── tutorial
+                        └── junit
+                            └── AppTest.java
+```
+
+The `main` folder contains the production code and resources. Under the `test` forlder you will find all the test cases and the code that support the tests.
+
+:::info
+
+Only the  code inside in the main folder is included in the package of the application. The production code can't access to any code in the folder test.
+
+:::
+
+
+Run the tests:
+
+
+```sh
+mvn test
+```
+
+Output:
+
+```text
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ----------------< com.saburto.tutorial:junit5-tutorial >----------------
+[INFO] Building junit5-tutorial 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ junit5-tutorial ---
+[INFO] skip non existing resourceDirectory /home/saburto/git/junit5-tutorial/src/main/resources
+[INFO]
+[INFO] --- compiler:3.13.0:compile (default-compile) @ junit5-tutorial ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug release 21] to target/classes
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ junit5-tutorial ---
+[INFO] skip non existing resourceDirectory /home/saburto/git/junit5-tutorial/src/test/resources
+[INFO]
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ junit5-tutorial ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug release 21] to target/test-classes
+[INFO]
+[INFO] --- surefire:3.3.0:test (default-test) @ junit5-tutorial ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+# highlight-next-success
+[INFO] Running com.saburto.tutorial.junit.AppTest
+# highlight-next-success
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.saburto.tutorial.junit.AppTest
+[INFO]
+[INFO] Results:
+[INFO]
+# highlight-next-success
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.121 s
+[INFO] Finished at: 2025-01-05T02:39:45+01:00
+[INFO] ------------------------------------------------------------------------
+```
+
+Did you get a similar output?
+
+
+import React, {useState} from 'react';
+
+import ConfettiExplosion from 'react-confetti-explosion';
+
+export const Quiz = () => {
+
+  const [showError, setShowError] = useState(false)
+  const [showConfetti, setShowConfetti] = useState(false)
+
+  const onYes = () => {
+    setShowError(false);
+    setShowConfetti(true);
+    console.log('yes');
+  };
+
+  const onNo = () => {
+    setShowError(true);
+    setShowConfetti(false);
+  };
+
+  return (
+
+      <div>
+      <input type="radio" name="quiz" onChange={onYes}></input>
+      <label>Yes</label>
+
+      <input type="radio" name="quiz" onChange={onNo}></input>
+      <label>No</label>
+{showError &&
+<p>Check if java and maven is well configured in your terminal session</p>}
+
+{showConfetti && <><p>Congrats! Let's continue</p><ConfettiExplosion /></>}
+
+      </div>
+
+
+      );
+
+}
+
+<Quiz />
+

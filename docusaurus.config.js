@@ -65,7 +65,18 @@ const config = {
       }),
     ],
   ],
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'tutorials',
+        path: 'tutorials',
+        routeBasePath: 'tutorials',
+        sidebarPath: './sidebarsTutorials.js'
+      }
+    ]
 
+  ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -83,6 +94,13 @@ const config = {
             sidebarId: "tilSidebar",
             position: "left",
             label: "Today I Learned",
+          },
+          {
+            type: "docSidebar",
+            position: "left",
+            sidebarId: "tutorials",
+            label: "Tutorials",
+            docsPluginId: "tutorials"
           },
           {
             to: "blog",
@@ -103,6 +121,21 @@ const config = {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
         additionalLanguages: ["java", "ini", "bash"],
+        magicComments: [
+          {
+            className: 'theme-code-block-highlighted-line',
+            line: 'highlight-next-line',
+            block: { start: 'highlight-start', end: 'highlight-end' }
+          },
+          {
+            className: 'code-input',
+            line: 'highlight-next-input'
+          },
+          {
+            className: 'code-success',
+            line: 'highlight-next-success'
+          }
+        ]
       },
     }),
 };
