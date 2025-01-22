@@ -7,6 +7,7 @@ date: 2024-06-22T00:00
 tags: [oop, java, design-patterns, refactoring]
 
 hide_table_of_contents: false
+draft: true
 ---
 
 Let's explore how to implement status-based logic in a way that is both robust and easy to understand.

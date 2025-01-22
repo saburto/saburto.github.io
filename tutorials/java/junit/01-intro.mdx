@@ -1,54 +1,61 @@
 ---
 draft: true
+sidebar_position: 1
 ---
-# 01 - Introduction
 
-The goal of this tutorial is to be profency in the use of Junit5.
+# Introduction
 
+This tutorial will guide you through the fundamentals of JUnit 5, the popular testing framework for Java. You will learn how to write, maintain, and execute tests effectively, as well as how to incorporate test-driven development principles into your workflow.
 
-## Requeriments
+This tutorial aims to help you understand core concepts using fundamental tools. While you can use an IDE, it's **highly recommended** to follow the exercises using a simple **text editor** and the **command line** in a terminal console. This approach allows for a deeper understanding of the underlying processes and promotes a stronger grasp of the fundamentals.
 
-- Console Terminal using **bash/zsh** or any other similar.
-- Any **text editor**. There is no necessary any IDE.
-- Basic knowledge of **Java**.
+## Prerequisites
+
+Basic knowledge of Java is required. If you are already familiar with any C-like language, such as C, C++, C#, PHP, or JavaScript, this tutorial will still be beneficial.
+
+To get started, ensure you have the following:
+
+- **Terminal console** on Linux, Macos or WSL.
+- **Text editor**.
 - Java **JDK 21** or superior.
-
+- **Maven 3**.
 
 <details>
 <summary>How to install JDK</summary>
 
 Using **sdkman**:
 
-  ```bash
-  sdk install java
-  ```
+```bash
+sdk install java
+```
 
 :::tip
-  Verify the current version of java:
-  ```bash
-  java -version # --version
-  ```
-  It should return something like this, it depends on your OS and architecture.
+Verify the current version of java:
 
-  ```
+```bash
+java -version # --version
+```
+
+It should return something like this, it depends on your OS and architecture.
+
+```log
 openjdk 21.0.5 2024-10-15 LTS
 OpenJDK Runtime Environment Temurin-21.0.5+11 (build 21.0.5+11-LTS)
 OpenJDK 64-Bit Server VM Temurin-21.0.5+11 (build 21.0.5+11-LTS, mixed mode, sharing)
-  ```
+```
+
 :::
+
 </details>
-
-- Maven. 
-
 
 <details>
 <summary>How to install Maven</summary>
 
 Using **sdkman**:
 
-  ```bash
-  sdk install maven
-  ```
+```bash
+sdk install maven
+```
 
 :::tip
 
@@ -60,7 +67,7 @@ mvn -version
 
 Result looks like this:
 
-```bash
+```log
 Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)
 Maven home: /home/saburto/.sdkman/candidates/maven/current
 Java version: 21.0.5, vendor: Eclipse Adoptium, runtime: /home/saburto/.sdkman/candidates/java/21.0.5-tem
@@ -72,43 +79,299 @@ OS name: "linux", version: "6.8.0-49-generic", arch: "amd64", family: "unix"
 
 </details>
 
+## Create a new project
 
-## Advice
+Using [maven archetype quickstart](https://maven.apache.org/archetypes/maven-archetype-quickstart/) to create a new project:
 
-Try to not copy and paste the source code or the commands, try by your self step-by-step.
+```shell
+mvn archetype:generate \
+  -DarchetypeGroupId=org.apache.maven.archetypes \
+  -DarchetypeArtifactId=maven-archetype-quickstart \
+  -DarchetypeVersion=1.5 \
+  -DjavaCompilerVersion=21 \
+  -DjunitVersion=5.11.4 \
+  -DgroupId=com.saburto.tutorial \
+  -DartifactId=junit5-tutorial \
+  -Dversion=1.0-SNAPSHOT \
+  -Dpackage=com.saburto.tutorial.junit \
+  -DinteractiveMode=false
+```
 
+:::info
 
-## Test your self
+In order to pass java properties you need to use `-D` before the property name.
 
+:::
 
-import React, {useState} from 'react';
+For this tutorial we are using the following properties:
 
-export const Quiz = () => {
+| Property              | Description                                                                                      | Recommended value          |
+| --------------------- | ------------------------------------------------------------------------------------------------ | -------------------------- |
+| `javaCompilerVersion` | Specifies the Java version to be used for compilation.                                           | 21                         |
+| `junitVersion`        | Specifies the JUnit version to be used for testing.                                              | 5.11.4                     |
+| `groupId`             | Uniquely identifies your project across all projects. Usually based on the reversed domain name. | com.saburto.tutorial       |
+| `artifactId`          | The name of your project or module (e.g., the JAR file name without the version).                | junit5-tutorial            |
+| `version`             | Initial version                                                                                  | 1.0-SNAPSHOT               |
+| `package`             | Java package of the project                                                                      | com.saburto.tutorial.junit |
+| `interactiveMode`     | Do not ask for confirmation                                                                      | false                      |
 
-  const [result, setResult] = useState("")
-  
-  const handleAnswer = (event) => {
-    if (event.target.value === "java -version") {
-        setResult("Correct!")
-      } else {
-          setResult("No correcto!")
-        }
+After running the command, you should see output similar to this (the exact paths and timestamps will vary):
 
-    };
+```log
+[INFO] ----------------------------------------------------------------------------
+[INFO] Using following parameters for creating project from Archetype: maven-archetype-quickstart:1.5
+[INFO] ----------------------------------------------------------------------------
+[INFO] Parameter: groupId, Value: com.saburto.tutorial
+[INFO] Parameter: artifactId, Value: junit5-tutorial
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Parameter: package, Value: com.saburto.tutorial.junit
+[INFO] Parameter: packageInPathFormat, Value: com/saburto/tutorial/junit
+[INFO] Parameter: junitVersion, Value: 5.11.4
+[INFO] Parameter: package, Value: com.saburto.tutorial.junit
+[INFO] Parameter: groupId, Value: com.saburto.tutorial
+[INFO] Parameter: artifactId, Value: junit5-tutorial
+[INFO] Parameter: javaCompilerVersion, Value: 21
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Project created from Archetype in dir: /home/saburto/git/junit5-tutorial
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS // [!code highlight]
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.765 s
+[INFO] Finished at: 2025-01-05T09:47:32+01:00
+[INFO] ------------------------------------------------------------------------
+```
 
-  return (<>
-          <p> How to verify the current JDK version? </p>
-          <input type="textarea" onChange={handleAnswer} />
-          {result}
-          <p> How to verify the current Maven version? </p>
-          <input type="textarea" />
-          </>);
+The most important line is `BUILD SUCCESS`, which indicates that the project was created successfully.
 
+Go to the project directory:
+
+```shell
+cd junit5-tutorial
+```
+
+Here is the folder structure generated
+
+```log
+// [!code word:main]
+// [!code word:test]
+// [!code word:pom\.xml]
+├── pom.xml
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── saburto
+    │               └── tutorial
+    │                   └── junit
+    │                       └── App.java
+    └── test
+        └── java
+            └── com
+                └── saburto
+                    └── tutorial
+                        └── junit
+                            └── AppTest.java
+```
+
+- `src/main/java`: Contains your application's source code.
+- `src/test/java`: Contains your test code.
+- `pom.xml`: The Maven Project Object Model (POM) file. It defines project metadata, dependencies (like JUnit 5), and build configurations.
+
+<details>
+<summary>pom.xml Junit5 dependency</summary>
+
+The archetype already add the junit5 dependency as follow:
+
+```xml title="pom.xml"
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.11.4</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Optionally: parameterized tests support -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+```
+
+</details>
+
+:::info
+
+Only the code inside the main folder is included in the packaged application. The production code cannot access any code in the test folder.
+
+:::
+
+Run the tests:
+
+```shell
+mvn test
+```
+
+You should see output similar to the following:
+
+```log
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ junit5-tutorial ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug release 21] to target/test-classes
+[INFO]
+[INFO] --- surefire:3.3.0:test (default-test) @ junit5-tutorial ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S // [!code focus]
+[INFO] -------------------------------------------------------
+[INFO] Running com.saburto.tutorial.junit.AppTest // [!code focus]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.saburto.tutorial.junit.AppTest // [!code focus]
+[INFO]
+[INFO] Results: // [!code focus]
+[INFO]
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 // [!code focus]
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS // [!code focus]
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.121 s
+[INFO] Finished at: 2025-01-05T02:39:45+01:00
+[INFO] ------------------------------------------------------------------------
+```
+
+🎉 Congratulations! You've successfully created a Java Maven project, with JUnit 5 as a dependency.
+
+The output `Tests run: 1, Failures: 0, Errors: 0, Skipped: 0` confirms that the test passed. The `BUILD SUCCESS` message indicates that Maven executed all tasks successfully.
+
+## Hello, World! Test case
+
+The Maven archetype generated a default test class for us, named `AppTest.java`. It's located in the `src/test/java` directory, mirroring the package structure of our main application code.
+
+Here's the initial content of `AppTest.java`:
+
+```java title="AppTest.java"
+package com.saburto.tutorial.junit;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * Unit test for simple App.
+ */
+public class AppTest {
+
+    /**
+     * Rigorous Test :-)
+     */
+    @Test
+    public void shouldAnswerWithTrue() {
+        assertTrue(true);
+    }
 }
 
-<Quiz/>
+```
 
+- **`@Test`:** Marks a method as a test case. JUnit will discover and execute methods annotated with `@Test`.
+- **`assertTrue`:** This is an _assertion_ method. The argument must be `true` to pass.
 
+Let's add our new test case for `Hello!, World`
 
+```java title="AppTest.java"
+package com.saburto.tutorial.junit;
 
+import static org.junit.jupiter.api.Assertions.assertEquals; // [!code focus]
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Test;
+
+/**
+ * Unit test for simple App.
+ */
+public class AppTest {
+
+    /**
+     * Rigorous Test :-)
+     */
+    @Test
+    public void shouldAnswerWithTrue() {
+        assertTrue(true);
+    }
+
+    @Test
+    void helloWorldTestCase() { // [!code focus]
+        var grettings = "Hello!, World"; // [!code focus]
+        assertEquals("Hello!, World", grettings); // [!code focus]
+    } // [!code focus]
+}
+
+```
+
+The `assertEquals` method checks if two values are equal. In this case, it verifies that the `greetings` variable holds the expected value.
+
+Let's run again the tests
+
+```shell
+mvn test
+```
+
+```log
+// [!code word:Tests run]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.saburto.tutorial.junit.AppTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in com.saburto.tutorial.junit.AppTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+```
+
+`Tests run: 2` confirms that both of our test cases have passed successfully.
+
+🎉 You've now written and executed your first "Hello, World!" test case using JUnit 5!
+
+In the next sections, we will explore more JUnit 5 features and write more complex test cases.
+
+import Giscus from "@giscus/react";
+import { useColorMode } from "@docusaurus/theme-common";
+
+export function MyApp() {
+  const { colorMode } = useColorMode();
+  return (
+    <Giscus
+      id="comments"
+      repo="saburto/saburto.github.io"
+      repoId="MDEwOlJlcG9zaXRvcnkxMTQyNjExODQ="
+      category="Comments"
+      categoryId="DIC_kwDOBs98wM4CmQTq"
+      mapping="url"
+      strict="0"
+      reactionsEnabled="1"
+      emitMetadata="0"
+      inputPosition="bottom"
+      theme={colorMode}
+      lang="en"
+    />
+  );
+}
+
+<MyApp />

@@ -6,6 +6,70 @@
 
 import { themes as prismThemes } from "prism-react-renderer";
 
+import rehypeShiki from "@shikijs/rehype";
+import { bundledLanguages } from "shiki";
+import {
+  transformerMetaHighlight,
+  transformerNotationDiff,
+  transformerNotationHighlight,
+  transformerNotationWordHighlight,
+  transformerNotationFocus,
+  transformerNotationMap,
+  transformerMetaWordHighlight
+} from "@shikijs/transformers";
+import { Children } from "react";
+
+
+const rehypeShikiPlugin = [
+  rehypeShiki,
+  {
+
+    themes: {
+      light: "github-light",
+      dark: "one-dark-pro",
+    },
+    langs: Object.keys(bundledLanguages),
+    transformers: [
+      transformerMetaHighlight({
+        className: "saburto-lineHighlighted"
+      }),
+      transformerNotationHighlight({
+        classActiveLine: "saburto-lineHighlighted"
+      }),
+      transformerMetaWordHighlight({
+        className: "saburto-activeWord"
+      }),
+      transformerNotationWordHighlight({
+        classActiveWord: "saburto-activeWord"
+      }),
+      transformerNotationDiff({
+        classLineAdd: "saburto-codeLineDiffAdd",
+        classLineRemove: "saburto-codeLineDiffRemove"
+      }),
+      transformerNotationFocus(), {
+        name: "my-transform",
+        root(node) {
+          const pre = node.children[0];
+          const metaRaw = this.options.meta.__raw;
+          pre.properties.dataCode = this.source;
+
+          if (!metaRaw.match(/showlang:false/)) {
+            pre.properties.lang = this.options.lang;
+          }
+          pre.properties.shikijs = true;
+          pre.properties.style = {};
+
+
+          const titleMatch = metaRaw.match(/title="([^"]+)"/);
+          if (titleMatch) {
+            pre.properties.title = titleMatch[1];
+          }
+        }
+      }
+    ],
+  }
+];
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "{ Sebastian Aburto }",
@@ -48,6 +112,7 @@ const config = {
           showLastUpdateTime: true,
           editUrl: "https://github.com/saburto/saburto.github.io/tree/main/",
           editLocalizedFiles: true,
+          beforeDefaultRehypePlugins: [rehypeShikiPlugin],
         },
         docs: {
           sidebarPath: "./sidebars.js",
@@ -72,7 +137,11 @@ const config = {
         id: 'tutorials',
         path: 'tutorials',
         routeBasePath: 'tutorials',
-        sidebarPath: './sidebarsTutorials.js'
+        sidebarPath: './sidebarsTutorials.js',
+        beforeDefaultRehypePlugins: [rehypeShikiPlugin],
+        showLastUpdateAuthor: true,
+        showLastUpdateTime: true,
+        editUrl: "https://github.com/saburto/saburto.github.io/tree/main/"
       }
     ]
 
