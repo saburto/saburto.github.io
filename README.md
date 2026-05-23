@@ -1,49 +1,56 @@
-# Starlight Starter Kit: Basics
+# saburto.dev
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+Personal blog built with [Astro 5](https://astro.build), deployed to GitHub Pages via GitHub Actions.
+
+## Tech Stack
+
+- **Astro 5** — static site generator
+- **Markdown** — blog content
+- **Shiki** — code syntax highlighting
+- **GitHub Actions** — CI/CD deploy to GitHub Pages
+
+## Project Structure
 
 ```
-npm create astro@latest -- --template starlight
+src/
+├── assets/          # Static images
+├── content/
+│   └── blog/        # Blog posts (*.md)
+├── content.config.ts # Zod schema for blog frontmatter
+├── layouts/
+│   ├── BaseLayout.astro      # HTML shell (head, nav, footer, theme toggle)
+│   └── BlogPostLayout.astro  # Blog post wrapper (date, JSON-LD)
+├── pages/
+│   ├── index.astro           # Home page
+│   ├── about.md              # About page
+│   ├── blog/[...slug].astro  # Blog post route
+│   ├── rss.xml.ts            # RSS feed
+│   └── sitemap.xml.ts        # Sitemap
+└── styles/
+    └── global.css            # All styles
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Commands
 
-## 🚀 Project Structure
+| Command             | Action                               |
+| ------------------- | ------------------------------------ |
+| `npm run dev`       | Start dev server at `localhost:4321` |
+| `npm run build`     | Build to `./dist/`                   |
+| `npm run preview`   | Preview the production build         |
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+## Adding a Blog Post
 
+Create a Markdown file in `src/content/blog/` with frontmatter:
+
+```yaml
+---
+title: My Post Title
+date: 2026-05-23
+description: Optional description for SEO and RSS
+draft: true   # Remove to publish
+---
 ```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+## Deployment
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
-
-Static assets, like favicons, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+Pushing to `main` triggers the `.github/workflows/deploy.yml` workflow, which builds the Astro site and deploys to GitHub Pages.
