@@ -45,4 +45,3 @@ sdk ls
 
 For more information, visit the [SDKMAN! website](https://sdkman.io/).
 
-Once your JDK is set up, you're ready to start writing tests. Check out my [JUnit 5 command-line tutorial](/blog/junit5-beginners-guide/).

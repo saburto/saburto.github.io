@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const allPosts = (await getCollection('blog')).filter(p => !p.data.draft);
+  const allTags = allPosts.flatMap(p => p.data.tags ?? []);
+  const uniqueTags = [...new Set(allTags)];
+
+  return uniqueTags.map(tag => {
+    const matchingPosts = allPosts
+      .filter(p => (p.data.tags ?? []).includes(tag))
+      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+    return {
+      params: { tag: tag.toLowerCase().replace(/\s+/g, '-') },
+      props: { tag, posts: matchingPosts },
+    };
+  });
+}
+
+const { tag } = Astro.props;
+const { posts } = Astro.props;
+---
+
+<BaseLayout
+  title={`Posts tagged "${tag}" - Sebastian Aburto`}
+  description={`${posts.length} blog post${posts.length === 1 ? '' : 's'} tagged with "${tag}" - Sebastian Aburto`}
+>
+  <h1>Posts tagged: <span class="tag-title">#{tag}</span></h1>
+  <p class="tag-count-text">{posts.length} post{posts.length === 1 ? '' : 's'}</p>
+
+  {posts.length === 0 ? (
+    <p>No posts found with this tag.</p>
+  ) : (
+    <div class="post-list">
+      {posts.map(post => (
+        <div class="post-item">
+          <span class="post-date">
+            {post.data.date.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </span>
+          <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}/`}>{post.data.title}</a>
+        </div>
+      ))}
+    </div>
+  )}
+
+  <p class="back-link"><a href="/tags/">← All tags</a></p>
+</BaseLayout>
+
+<style>
+  .tag-title {
+    color: var(--link);
+  }
+  .tag-count-text {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+  .back-link {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+  }
+  .back-link a {
+    color: var(--link);
+    text-decoration: none;
+  }
+  .back-link a:hover {
+    text-decoration: underline;
+  }
+</style>
