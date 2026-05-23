@@ -1,9 +1,8 @@
-name: Deploy to GitHub Pages
+name: Deploy Astro Site to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,42 +10,28 @@ permissions:
   pages: write
   id-token: write
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
   build:
-    name: Build Astro
+    name: Build Astro Site
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: npm ci
-      - name: Build website
-        run: npm run build
-
-      - name: Upload Build Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
+      - name: Install, build, and upload Astro assets
+        uses: withastro/action@v3
 
   deploy:
     name: Deploy to GitHub Pages
     needs: build
-
-    # Deploy to the github-pages environment
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
