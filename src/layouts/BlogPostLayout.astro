@@ -1,0 +1,70 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export interface Props {
+  post: CollectionEntry<'blog'>;
+  prevPost?: CollectionEntry<'blog'> | null;
+  nextPost?: CollectionEntry<'blog'> | null;
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await post.render();
+const dateStr = post.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const isoDate = post.data.date.toISOString();
+const updatedIso = post.data.updated?.toISOString();
+const pageUrl = `https://saburto.dev/blog/${post.id.replace(/\.mdx?$/, '')}/`;
+---
+
+<BaseLayout
+  title={`${post.data.title} - Sebastian Aburto`}
+  description={post.data.description}
+  ogType="article"
+  articleDate={isoDate}
+>
+  <article>
+    <h1>{post.data.title}</h1>
+    <p class="post-meta">
+      {dateStr}
+      {updatedIso && (
+        <span class="post-updated"> &middot; Updated {post.data.updated!.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+      )}
+    </p>
+    <Content />
+
+    {post.data.tags && post.data.tags.length > 0 && (
+      <div class="post-tags">
+        {post.data.tags.map(tag => (
+          <a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}/`} class="tag-link">#{tag}</a>
+        ))}
+      </div>
+    )}
+  </article>
+
+  {(prevPost || nextPost) && (
+    <nav class="blog-nav" aria-label="Adjacent posts">
+      {prevPost && <a href={`/blog/${prevPost.id.replace(/\.mdx?$/, '')}/`} rel="prev">&larr; {prevPost.data.title}</a>}
+      {nextPost && <a href={`/blog/${nextPost.id.replace(/\.mdx?$/, '')}/`} rel="next">{nextPost.data.title} &rarr;</a>}
+    </nav>
+  )}
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.data.title,
+    datePublished: isoDate,
+    ...(updatedIso && { dateModified: updatedIso }),
+    url: pageUrl,
+    description: post.data.description || '',
+    author: {
+      '@type': 'Person',
+      name: 'Sebastian Aburto',
+      url: 'https://github.com/saburto',
+    },
+  })}>
+  </script>
+</BaseLayout>

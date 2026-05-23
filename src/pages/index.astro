@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog'))
+  .filter(p => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout
+  title="Sebastian Aburto - Thoughts, ideas, philosophy, and practical tips about software development"
+  description="Practical Java tutorials, testing strategies, and software engineering insights by Sebastian Aburto"
+>
+  <h1 class="sr-only">Sebastian Aburto | Blog</h1>
+  <div class="post-list">
+    {posts.map(post => (
+      <div class="post-item">
+        <span class="post-date">
+          {post.data.date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })}
+        </span>
+        <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}/`}>{post.data.title}</a>
+      </div>
+    ))}
+  </div>
+</BaseLayout>
