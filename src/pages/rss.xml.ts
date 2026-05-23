@@ -9,7 +9,7 @@ export async function GET() {
   return rss({
     title: 'Sebastian Aburto',
     description: 'Thoughts on software, testing, and learning',
-    site: 'https://saburto.dev',
+    site: 'https://saburto.com',
     items: posts.map(post => ({
       title: post.data.title,
       description: post.data.description || '',

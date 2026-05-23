@@ -10,7 +10,7 @@ export interface Props {
   articleDate?: string;
 }
 
-const SITE = 'https://saburto.dev';
+const SITE = 'https://saburto.com';
 const { title, description, ogType, ogImage, articleDate } = Astro.props;
 const pageUrl = new URL(Astro.url.pathname, SITE).href;
 ---

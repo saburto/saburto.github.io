@@ -2,7 +2,7 @@
 
 ## Overview
 
-Personal blog at **saburto.dev**, a static site built with Astro 5. Posts are Markdown files with frontmatter. The site is styled with a custom CSS theme and uses Shiki for code syntax highlighting.
+Personal blog at **saburto.com**, a static site built with Astro 5. Posts are Markdown files with frontmatter. The site is styled with a custom CSS theme and uses Shiki for code syntax highlighting.
 
 ## Tech Stack
 
@@ -83,7 +83,7 @@ Defined in `src/content.config.ts`:
 ## Conventions
 
 - **Never use `--` or em dash (`—`) for separation in any text.** Use commas, colons, or other punctuation instead.
-- URLs are at `saburto.dev/blog/{slug}/` where slug is the filename minus `.md`
+- URLs are at `saburto.com/blog/{slug}/` where slug is the filename minus `.md`
 - The home page lists all non-draft posts sorted by date descending (newest first)
 - Theme toggle supports light, dark, and auto (follows system preference)
 - Every blog post gets JSON-LD structured data for SEO

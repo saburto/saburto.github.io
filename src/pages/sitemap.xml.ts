@@ -2,7 +2,7 @@ import { getCollection } from 'astro:content';
 
 export async function GET() {
   const posts = (await getCollection('blog')).filter(p => !p.data.draft);
-  const SITE = 'https://saburto.dev';
+  const SITE = 'https://saburto.com';
 
   const urls = [
     { loc: '/', lastmod: new Date().toISOString() },

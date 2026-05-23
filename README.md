@@ -1,4 +1,4 @@
-# saburto.dev
+# saburto.com
 
 Personal blog built with [Astro 5](https://astro.build), deployed to GitHub Pages via GitHub Actions.
 
