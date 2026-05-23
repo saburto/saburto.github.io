@@ -4,6 +4,9 @@ import { transformerNotationDiff } from '@shikijs/transformers';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://saburto.dev',
+  base: '/',
+  output: 'static',
   markdown: {
     shikiConfig: {
       themes: {
