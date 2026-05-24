@@ -450,6 +450,19 @@ article .footnotes {
   color: var(--text);
 }
 
+.footer-ai {
+  margin-bottom: 0.25rem;
+}
+
+.footer-ai a {
+  color: var(--muted);
+  transition: color 0.15s;
+}
+
+.footer-ai a:hover {
+  color: var(--link);
+}
+
 /* Asides / callouts */
 article .aside {
   padding: 0.75rem 1rem;

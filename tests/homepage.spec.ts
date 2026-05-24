@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const pages = ['/', '/about', '/projects'];
+const pages = ['/', '/about', '/projects', '/ai-transparency'];
 
 for (const path of pages) {
   test.describe(`${path} page`, () => {
@@ -49,5 +49,17 @@ test.describe('home page /', () => {
       const href = await links.nth(i).getAttribute('href');
       expect(href).toMatch(/^\/blog\/[\w-]+\/$/);
     }
+  });
+
+  test('footer has AI transparency link', async ({ page }) => {
+    await page.goto('/');
+
+    const link = page.locator('.footer-ai a');
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', '/ai-transparency');
+    await expect(link).toContainText('AI transparency');
+
+    await link.click();
+    await expect(page.locator('h1')).toContainText('AI transparency');
   });
 });
