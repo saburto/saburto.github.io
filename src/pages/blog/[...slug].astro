@@ -5,7 +5,7 @@ import BlogPostLayout from '../../layouts/BlogPostLayout.astro';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts
-    .filter(p => !p.data.draft)
+    .filter(p => import.meta.env.PROD ? !p.data.draft : true)
     .map(post => ({
       params: { slug: post.id.replace(/\.mdx?$/, '') },
       props: { post },
@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const allPosts = (await getCollection('blog'))
-  .filter(p => !p.data.draft)
+  .filter(p => import.meta.env.PROD ? !p.data.draft : true)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const currentIndex = allPosts.findIndex(p => p.id === post.id);

@@ -27,7 +27,7 @@ const pageUrl = `https://saburto.com/blog/${post.id.replace(/\.mdx?$/, '')}/`;
   articleDate={isoDate}
 >
   <article>
-    <h1>{post.data.title}</h1>
+    <h1>{post.data.title}{post.data.draft && <span class="draft-badge">[draft]</span>}</h1>
     <p class="post-meta">
       {dateStr}
       {updatedIso && (
