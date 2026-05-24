@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 
 export interface Props {
@@ -9,7 +10,7 @@ export interface Props {
 }
 
 const { post, prevPost, nextPost } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 const dateStr = post.data.date.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',

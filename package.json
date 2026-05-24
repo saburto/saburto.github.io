@@ -7,12 +7,18 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "playwright test",
+    "test:local": "BASE_URL=http://localhost:4323 playwright test",
+    "test:prod": "BASE_URL=https://saburto.com playwright test"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.12",
     "@shikijs/transformers": "^4.1.0",
-    "astro": "^5.6.1",
+    "astro": "^6.3.7",
     "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
   }
 }
