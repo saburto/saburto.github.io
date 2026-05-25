@@ -119,6 +119,7 @@ const pageUrl = new URL(Astro.url.pathname, SITE).href;
           </a>
         </div>
         <p class="footer-ai"><a href="/ai-transparency">AI transparency</a></p>
+        <p class="footer-disclaimer">All opinions are my own and not those of any employer or organization.</p>
         {gitSha && <p>Release {gitSha}, {new Date().toISOString().split('T')[0]}</p>}
         <p>&copy; {new Date().getFullYear()} Sebastian Aburto</p>
       </footer>

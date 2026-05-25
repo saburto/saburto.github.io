@@ -451,6 +451,8 @@ article .footnotes {
 }
 
 .footer-ai {
+  font-size: 0.75rem;
+  font-style: italic;
   margin-bottom: 0.25rem;
 }
 
@@ -461,6 +463,13 @@ article .footnotes {
 
 .footer-ai a:hover {
   color: var(--link);
+}
+
+.footer-disclaimer {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
 }
 
 /* Asides / callouts */
