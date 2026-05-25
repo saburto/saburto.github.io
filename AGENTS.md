@@ -2,14 +2,27 @@
 
 ## Overview
 
-Personal blog at **saburto.com**, a static site built with Astro 5. Posts are Markdown files with frontmatter. The site is styled with a custom CSS theme and uses Shiki for code syntax highlighting.
+Personal blog at **saburto.com**, a static site built with Astro 6. Posts are Markdown files with frontmatter. The site is styled with a custom CSS theme and uses Shiki for code syntax highlighting.
+
+## Privacy and Public Repository
+
+**This repository is public.** Never include:
+
+- **Secrets**: API keys, tokens, passwords, credentials, SSH keys, or environment variables
+- **Personal information**: private email addresses, phone numbers, home addresses, or any PII
+- **NDA-covered content**: names of people, clients, employers, companies, or internal projects that could violate a non-disclosure or confidentiality agreement
+- **Sensitive internal details**: unreleased product plans, proprietary algorithms, internal URLs, or infrastructure details
+
+When writing blog posts, use generic examples rather than real company names or projects unless already publicly disclosed. Review every commit for accidental exposure before pushing.
 
 ## Tech Stack
 
-- **Astro 5**: static site generator
+- **Astro 6**: static site generator
 - **Markdown**: blog content (no MDX)
-- **Shiki**: code syntax highlighting (Rosé Pine themes: `rose-pine-dawn` for light, `rose-pine-moon` for dark)
+- **Shiki**: code syntax highlighting (`one-light` for light mode, `one-dark-pro` for dark) with `@shikijs/transformers` for diff notation
 - **@astrojs/rss**: RSS feed generation
+- **sharp**: image optimization
+- **@playwright/test**: end-to-end testing
 
 ## Project Structure
 
@@ -73,12 +86,14 @@ public class Hello {
 
 Defined in `src/content.config.ts`:
 
-| Field         | Type    | Required | Notes                                        |
-| ------------- | ------- | -------- | -------------------------------------------- |
-| `title`       | string  | Yes      | Post title                                   |
-| `date`        | Date    | Yes      | Publication date (YYYY-MM-DD)                |
-| `description` | string  | No       | Used for meta description and JSON-LD        |
-| `draft`        | boolean | No       | When `true`, post is hidden from production  |
+| Field         | Type           | Required | Notes                                        |
+| ------------- | -------------- | -------- | -------------------------------------------- |
+| `title`       | string         | Yes      | Post title                                   |
+| `date`        | Date           | Yes      | Publication date (YYYY-MM-DD)                |
+| `description` | string         | No       | Used for meta description and JSON-LD        |
+| `draft`       | boolean        | No       | When `true`, post is hidden from production  |
+| `tags`        | string[]       | No       | List of tags for categorization              |
+| `updated`     | Date           | No       | Date the post was last updated               |
 
 ## Conventions
 
