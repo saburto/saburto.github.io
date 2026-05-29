@@ -98,6 +98,10 @@ Defined in `src/content.config.ts`:
 ## Conventions
 
 - **Never use `--` or em dash (`—`) for separation in any text.** Use commas, colons, or other punctuation instead.
+- **Avoid passive voice.** Use active voice whenever possible. Prefer direct, clear sentences (e.g., "The agent constructed this script" instead of "This script was constructed by the agent").
+- **Prefer positive phrasing.** Frame sentences in the affirmative rather than the negative to improve readability (e.g., "Remember to close the connection" instead of "Don't forget to close the connection").
+- **Avoid filler words and helper verbs.** Cut words that add no meaning (e.g., "basically", "actually", "just", "really", "very", "quite", "rather", "somewhat"). Remove unnecessary helper verbs (e.g., "start to learn" → "learn", "helps to improve" → "improves").
+- **Ensure logical, coherent flow.** Every paragraph and section should follow naturally from the previous one. Use transitions where needed, and check that ideas progress in a clear order rather than jumping between unrelated points.
 - URLs are at `saburto.com/blog/{slug}/` where slug is the filename minus `.md`
 - The home page lists all non-draft posts sorted by date descending (newest first)
 - Theme toggle supports light, dark, and auto (follows system preference)

@@ -25,6 +25,10 @@ Verify optional properties if present:
 ### 2. Content and Formatting Checks
 
 - **Typography:** Ensure no double hyphens (`--`) or em dashes (`—`) are used in the text. Suggest rewriting with commas, colons, or other punctuation.
+- **Passive voice:** Flag passive voice constructions and suggest active voice rewrites. Prefer direct, clear sentences (e.g., "The agent constructed this script" instead of "This script was constructed by the agent").
+- **Positive phrasing:** Flag negative sentence constructions and suggest affirmative rewrites (e.g., "Remember to close the connection" instead of "Don't forget to close the connection").
+- **Filler words and helper verbs:** Flag filler words ("basically", "actually", "just", "really", "very", "quite") and unnecessary helper verbs (e.g., "start to learn" → "learn", "helps to improve" → "improves"). Suggest removing them.
+- **Logical coherent flow:** Review the overall structure. Every paragraph and section should follow naturally from the previous one. Flag sections that feel disconnected, jump between unrelated points, or lack clear transitions.
 - **Skimmability & Headings:** Post must be skimmer-friendly. Ensure proper formatting, bolding, bullet points, and logical usage of heading levels (e.g., stopping appropriately at H2s and H3s without skipping levels).
 - **Code Blocks:** Ensure all code blocks use standard Markdown triple backticks with an optional, correct language identifier matching the content (since Shiki is used).
 - **Public Repository Privacy:** Read through the content to detect any:

@@ -12,21 +12,57 @@ tags: ["debugging", "java", "jdb", "ai", "agentic", "cli"]
 
 IDEs and their visual debuggers in the agentic coding era are not an option. 🙅
 
-When I need to investigate a complex issue, the agent normally adds a bunch of `System.out.println`, `print`, or `log.info` statements in order to get more information. I can't blame it; many times I did that before. Also that means compiling, packaging, and running again, especially in Java.
+When I need to investigate a complex issue, the agent normally adds a bunch of `System.out.println`, `print`, or `log.info` statements in order to get more information.
 
-Very innefecient flow I need something more advanced.
+```java
+System.out.println("I am here!!");
+```
 
+ It's a natural approach; many times I did that before. Also that means compiling, packaging, and running again, especially in Java. 🙅
+
+I need something my agent can use.
 
 ## JDB: The built-in command-line debugger for Java
 
 I decided to give `jdb` a try, the command-line debugger that was always there (since jdk 1).
 
+You can do almost everything: 
+
+- add breakpoints: `stop at com.saburto.Bar:46` or by method `stop at com.saburto.Bar.getAllLedgers`
+- steps: `step`, `step up`,  `stepi`, `next`, `cont`
+- get variables info: `print`, `dump`, `eval`, `locals`, `set`
+- threads: `where`, `threadgroups`, `up`, `down`, `kill`, `interrup`
+- show source code: `use` to add the source code path, `list` to show the code
+
+The source code looks very nice in the output of the coding agent
+
+```java
+  42    @GetMapping
+  43    public PageResponse<LedgerResponse> getAllLedgers(
+  44            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+  45
+  46 =>     var ledgers = ledgerService.getAllLedgers(page, size);
+  47
+  48        var content =
+  49                ledgers.getContent().stream().map(mapper::toLedgerResponse).toList();
+  50
+  51        return new PageResponse<>(content, page, size, ledgers.getTotalElements(), ledgers.getTotalPages());
+```
 
 
+This opens incredible opportunities for your agent to give you much better information when you need to do some debugging. Here are a few prompts you can try:
 
-You can do almost everything: add breakpoints, steps (`next`, `stepi`, `stepo`, `cont`), get variable info, thread information, among other things.
+1. **Dump a request payload:** "Attach jdb to my app at port 5005, set a breakpoint at `LedgerController.getAllLedgers`, trigger `curl localhost:8080/api/ledgers`, and dump every field of the `ledgers` Page object — I want to see the actual database records returned."
 
-This opens incredible opportunities for your agent to give you much better information when you need to do some debugging.
+2. **Trace a variable's mutations:** "Set a breakpoint in `PaymentService.process`, step through line by line with `next`, and dump the `payment` variable after each line. I want to see how the status field changes as it moves through validation, enrichment, and persistence."
+
+3. **Inspect concurrency at a checkpoint:** "Break at the top of my scheduled job in `ReconciliationScheduler.run`, trigger a full thread dump with `where all`, and show me what every other thread is doing at that moment. Any thread blocked on a lock?"
+
+4. **Evaluate an expression in place:** "Set a breakpoint at line 89 of `InvoiceCalculator`, and when it hits, run `eval invoice.getLineItems().stream().mapToDouble(LineItem::getTotal).sum()` — I want to verify the line-item math without adding a log line, rebuilding, and waiting for Maven."
+
+5. **Debug exception state without re-deploying:** "Break inside the catch block of `PaymentGateway.submit` (line 203), send a payment request with a bad card number, and when the breakpoint fires, dump the exception's message, cause chain, and the local variables — I want to see exactly what the gateway rejected and what state the request was in."
+
+These prompts share a common shape: pick a breakpoint, trigger the code path, and let the agent extract the data. The agent handles the timing, the jdb commands, and the output parsing — you get the answer in your terminal.
 
 Let's see some examples
 
@@ -137,13 +173,13 @@ No code changes, no rebuilds, no restart. Just the debugger, the agent, and a `t
 
 ## AI Agentic Debugging
 
-There is no mouseover variable inspection, no inline values, no call-stack tree with expandable frames. But that constraint has its advantages:
+It lacks mouseover variable inspection, inline values, and expandable call-stack trees. But that constraint has its advantages:
 
 * **Agent-friendly.** Text is the universal interface. An AI agent can read jdb output and decide its next command.
-* **Scriptable.** Every jdb session can be captured, replayed, or scripted.
-* **Composable.** jdb fits into pipelines: its output can be parsed by other tools. For example can explain the thread stack.
+* **Scriptable.** You can capture, replay, or script every jdb session.
+* **Composable.** jdb fits into pipelines: other tools can parse its output to explain thread stacks, for example.
 * **Remote-friendly.** It works over SSH just as well as locally.
 
 The terminal is the agent's native habitat. Every CLI tool you learn becomes a tool the agent can wield on your behalf. `jdb` is just one example; the same pattern applies to `gdb` for C/C++, `pdb` for Python, `dlv` for Go, or any debugger that exposes a command interface. If you can type it, the agent can use it.
 
-So, did you still prefer hiting the F11 to do the step by step debugging?
+So, do you still prefer hitting F11 to step through your code?
