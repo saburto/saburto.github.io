@@ -16,6 +16,17 @@ When I need to investigate a complex issue, the agent normally adds a bunch of `
 
 ```java
 System.out.println("I am here!!");
+
+
+void methodFoo() {
+    System.out.println("Enter in the method foo!!");
+
+    ...
+
+    if (foo) {
+        System.out.println("Enter in the if!!");
+    }
+}
 ```
 
  It's a natural approach; many times I did that before. Also that means compiling, packaging, and running again, especially in Java. 🙅
@@ -26,15 +37,30 @@ I need something my agent can use.
 
 I decided to give `jdb` a try, the command-line debugger that was always there (since jdk 1).
 
-You can do almost everything: 
+You can connect to a jvm that is running with the debugger options: `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`:
 
 - add breakpoints: `stop at com.saburto.Bar:46` or by method `stop at com.saburto.Bar.getAllLedgers`
 - steps: `step`, `step up`,  `stepi`, `next`, `cont`
 - get variables info: `print`, `dump`, `eval`, `locals`, `set`
-- threads: `where`, `threadgroups`, `up`, `down`, `kill`, `interrup`
+- threads: `where`, `threadgroups`, `up`, `down`, `kill`, `interrupt`
 - show source code: `use` to add the source code path, `list` to show the code
 
-The source code looks very nice in the output of the coding agent
+<<<<<<< HEAD
+This opens incredible opportunities for your agent to give you much better information when you need to do some debugging. Here are a few prompts you can try:
+
+1. **Dump a request payload:** "Attach jdb to my app at port 5005, set a breakpoint at `LedgerController.getAllLedgers`, trigger `curl localhost:8080/api/ledgers`, and dump every field of the `ledgers` Page object — I want to see the actual database records returned."
+
+1. **Trace a variable's mutations:** "Set a breakpoint in `PaymentService.process`, step through line by line with `next`, and dump the `payment` variable after each line. I want to see how the status field changes as it moves through validation, enrichment, and persistence."
+
+1. **Inspect concurrency at a checkpoint:** "Break at the top of my scheduled job in `ReconciliationScheduler.run`, trigger a full thread dump with `where all`, and show me what every other thread is doing at that moment. Any thread blocked on a lock?"
+
+1. **Evaluate an expression in place:** "Set a breakpoint at line 89 of `InvoiceCalculator`, and when it hits, run `eval invoice.getLineItems().stream().mapToDouble(LineItem::getTotal).sum()` — I want to verify the line-item math without adding a log line, rebuilding, and waiting for Maven."
+
+1. **Debug exception state without re-deploying:** "Break inside the catch block of `PaymentGateway.submit` (line 203), send a payment request with a bad card number, and when the breakpoint fires, dump the exception's message, cause chain, and the local variables — I want to see exactly what the gateway rejected and what state the request was in."
+
+These prompts share a common shape: pick a breakpoint, trigger the code path, and let the agent extract the data. The agent handles the timing, the jdb commands, and the output parsing — you get the answer in your terminal.
+=======
+The source code looks clean in the output of the coding agent
 
 ```java
   42    @GetMapping
@@ -49,24 +75,35 @@ The source code looks very nice in the output of the coding agent
   51        return new PageResponse<>(content, page, size, ledgers.getTotalElements(), ledgers.getTotalPages());
 ```
 
+This is not only for your code, also works for any dependency.
+>>>>>>> 3247a39 (add skills an better conventions)
 
 This opens incredible opportunities for your agent to give you much better information when you need to do some debugging. Here are a few prompts you can try:
 
-1. **Dump a request payload:** "Attach jdb to my app at port 5005, set a breakpoint at `LedgerController.getAllLedgers`, trigger `curl localhost:8080/api/ledgers`, and dump every field of the `ledgers` Page object — I want to see the actual database records returned."
+### Scenarios
+1. **Dump a request payload**
 
-2. **Trace a variable's mutations:** "Set a breakpoint in `PaymentService.process`, step through line by line with `next`, and dump the `payment` variable after each line. I want to see how the status field changes as it moves through validation, enrichment, and persistence."
+   > Attach jdb to my app at port 5005, set a breakpoint at `LedgerController.getAllLedgers`, trigger `curl localhost:8080/api/ledgers`, and dump every field of the `ledgers` Page object — I want to see the actual database records returned.
 
-3. **Inspect concurrency at a checkpoint:** "Break at the top of my scheduled job in `ReconciliationScheduler.run`, trigger a full thread dump with `where all`, and show me what every other thread is doing at that moment. Any thread blocked on a lock?"
+2. **Trace a variable's mutations**
 
-4. **Evaluate an expression in place:** "Set a breakpoint at line 89 of `InvoiceCalculator`, and when it hits, run `eval invoice.getLineItems().stream().mapToDouble(LineItem::getTotal).sum()` — I want to verify the line-item math without adding a log line, rebuilding, and waiting for Maven."
+   > Set a breakpoint in `PaymentService.process`, step through line by line with `next`, and dump the `payment` variable after each line. I want to see how the status field changes as it moves through validation, enrichment, and persistence.
 
-5. **Debug exception state without re-deploying:** "Break inside the catch block of `PaymentGateway.submit` (line 203), send a payment request with a bad card number, and when the breakpoint fires, dump the exception's message, cause chain, and the local variables — I want to see exactly what the gateway rejected and what state the request was in."
+3. **Inspect concurrency at a checkpoint**
+
+   > Break at the top of my scheduled job in `ReconciliationScheduler.run`, trigger a full thread dump with `where all`, and show me what every other thread is doing at that moment. Any thread blocked on a lock?
+
+4. **Evaluate an expression in place**
+
+   > Set a breakpoint at line 89 of `InvoiceCalculator`, and when it hits, run `eval invoice.getLineItems().stream().mapToDouble(LineItem::getTotal).sum()` — I want to verify the line-item math without adding a log line, rebuilding, and waiting for Maven.
+
+5. **Debug exception state without re-deploying**
+
+   > Break inside the catch block of `PaymentGateway.submit` (line 203), send a payment request with a bad card number, and when the breakpoint fires, dump the exception's message, cause chain, and the local variables — I want to see exactly what the gateway rejected and what state the request was in.
 
 These prompts share a common shape: pick a breakpoint, trigger the code path, and let the agent extract the data. The agent handles the timing, the jdb commands, and the output parsing — you get the answer in your terminal.
 
-Let's see some examples
-
-## Example 1: checking variables in a request
+## Checking variables in a request
 
 
 For a Java application, you need to start the system with the proper arguments: `java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar app.jar`
@@ -79,11 +116,7 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=
 
 Then connect by attaching to the port: `jdb -attach 5005`, and that is it.
 
-`jdb` is interactive by design, but in an agentic workflow the session must run hands-off, with the HTTP request firing while the debugger is attached and waiting. The agent constructed this shell script:
-
-
-To see the actual ledger records, we need to poke at the ArrayList's internals. The agent assembled another script, this time adding a `next` step and a series of `dump` commands:
-
+`jdb` is interactive by design, but in an agentic workflow the session must run hands-off, with the HTTP request firing while the debugger is attached and waiting.
 
 IMPORTANT: this is only an example of how my agent generated the script to use the debugger. Depending on your case it may be different; let your agent create the right script.
 
@@ -114,7 +147,7 @@ Let's break this down:
 3. After a 2-second head start, `curl` triggers the REST endpoint that runs `getAllLedgers()`.
 4. The script then waits for jdb to finish and reports the exit code.
 
-The agent reads `/tmp/jdb-output.txt` afterward and sees the breakpoint hit:
+The agent reads `/tmp/jdb-output.txt` afterward.
 
 The `next` command steps past the `var ledgers = ...` assignment before the dumps run. The `sleep` calls pace the commands so they arrive after the breakpoint fires. The agent reads the output file and reconstructs the data.
 
@@ -132,7 +165,7 @@ ledgers.content.elementData[0] = {
 
 ## A better workflow using Tmux
 
-The pipe-and-background approach works, but there is an even smoother way: `tmux` You can tell the agent to open a new panel or window and send all the debugging commands there while keeping your editor open in the original pane.
+The pipe-and-background approach works, but there is an even smoother way: `tmux`. You can tell the agent to open a new panel or window and send all the debugging commands there while keeping your editor open in the original pane.
 
 Here is an example. Without touching a single line of code, I asked the agent to show me the HTTP request headers hitting a controller method. After a few tries, it delivered exactly what I needed:
 
@@ -169,6 +202,60 @@ SecurityContextHolderAwareRequestWrapper
 ```
 
 No code changes, no rebuilds, no restart. Just the debugger, the agent, and a `tmux`
+
+## Advanced debugging: chasing the SQL
+
+Sometimes you need to dig deeper. I wanted to see the exact SQL that Spring Data JDBC sends, straight from the PostgreSQL wire. I started at the high level (`LedgerController.getAllLedgers`) and worked down through the stack, trying breakpoints until the right one stuck:
+
+```
+┌──────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────┬────────┐
+│ Layer                                                │ Breakpoint tried                                                                   │ Result │
+├──────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┼────────┤
+│ java.sql.Connection.prepareStatement(String)         │ Failed — Connection is an interface, jdb can't break on interfaces                 │        │
+├──────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┼────────┤
+│ org.postgresql.jdbc.PgConnection.prepareStatement    │ Never hit — HikariCP proxies the connection                                        │        │
+├──────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┼────────┤
+│ com.zaxxer.hikari.pool.ProxyPreparedStatement.<init> │ ✅ Hit — the Hikari wrapper constructor receives the real statement as an argument │        │
+└──────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────┴────────┘
+```
+
+### The key breakpoint
+
+```
+stop in com.zaxxer.hikari.pool.ProxyPreparedStatement.<init>
+```
+
+This fires every time a prepared statement is created. The constructor signature includes a statement parameter — the real `PgPreparedStatement` from the PostgreSQL driver.
+
+### Extract the SQL from the driver internals
+
+At the breakpoint, the statement variable is a `PgPreparedStatement` which has a `preparedQuery` field of type `CachedQuery`:
+
+```
+print statement.preparedQuery
+→ CachedQuery{executeCount=10, query=SELECT "ledger_ledgers"."id" AS "id", ... LIMIT 20, isFunction=false}
+```
+
+The `CachedQuery.toString()` conveniently includes the full SQL string.
+
+### Sending commands to a tmux pane
+
+Since jdb ran interactively in a tmux pane, I used:
+
+```bash
+tmux send-keys -t 3 'print statement.preparedQuery' Enter
+```
+
+### Summary of the chain
+
+```
+curl → Tomcat → Spring MVC → LedgerController.getAllLedgers()
+  → LedgerService → PagingAndSortingRepository.findAll(Pageable)
+    → Spring Data JDBC → JdbcTemplate
+      → HikariCP → ProxyPreparedStatement.<init>(conn, PgPreparedStatement)
+                                                   ↑
+                                         statement.preparedQuery = the SQL
+```
 
 
 ## AI Agentic Debugging
