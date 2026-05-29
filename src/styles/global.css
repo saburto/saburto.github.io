@@ -287,6 +287,36 @@ article li > ol {
   margin-bottom: 0;
 }
 
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+/* Center the Markdown paragraph that wraps an image */
+article p:has(img) {
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+/* Tighten the bottom margin on images followed by a caption */
+article p:has(img):has(+ p) img {
+  margin-bottom: 0.3rem;
+}
+
+/* Center and style the caption paragraph that follows an image */
+article p:has(img) + p {
+  text-align: center;
+  margin-top: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
 article blockquote {
   border-left: 3px solid var(--link);
   padding: 0.5rem 1rem;

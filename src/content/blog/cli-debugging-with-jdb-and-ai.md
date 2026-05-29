@@ -1,45 +1,49 @@
 ---
 title: "Java Command-Line Debugging with AI Agent"
 date: 2026-05-25
-description: "Debugging a Spring Boot application at the breakpoint level using nothing but jdb and an AI coding agent in the terminal."
+description: "Debugging a java application using nothing but jdb and an AI coding agent in the terminal."
 draft: true
 tags: ["debugging", "java", "jdb", "ai", "agentic", "cli"]
 ---
 
-Since my development workflow relies on TDD, I rarely need to use a debugger, but I occasionally need one when investigating legacy systems.
+![Eclipse IDE suspended at a breakpoint showing the debugging perspective](../../assets/eclipse_suspended_at_breakpoint.webp)
 
-I am not a big fan of IDEs and their visual debuggers, and in the agentic coding era those are not an option.
+*Image: [Eclipse suspended at breakpoint](https://commons.wikimedia.org/wiki/File:Eclipse_suspended_at_breakpoint.png)*
+
+IDEs and their visual debuggers in the agentic coding era are not an option. 🙅
 
 When I need to investigate a complex issue, the agent normally adds a bunch of `System.out.println`, `print`, or `log.info` statements in order to get more information. I can't blame it; many times I did that before. Also that means compiling, packaging, and running again, especially in Java.
 
-But that is not the right option. Sometimes you don't have good information about what the status of the variables, threads, etc. is. Then you need something more advanced.
+Very innefecient flow I need something more advanced.
 
 
-## JDB: The built-in command-line debugger
+## JDB: The built-in command-line debugger for Java
 
-I had in the past the opportunity to work with some command-line debuggers for Ruby and Perl. For obvious reasons they are first-class command-line tools from the beginning. So using them was not an issue.
+I decided to give `jdb` a try, the command-line debugger that was always there (since jdk 1).
 
-Most of the time I work in Java.
 
-But in Java the history is different; normally I had an IDE that gave me a super full-fledged visual debugger.
 
-Again, but when using an agentic workflow, the visual GUI is not an option anymore.
 
-So for Java, I decided to give `jdb` a try, the command-line debugger that was always there. Despite the popularity of IDEs in Java, there are already a bunch of command-line tools available in the JDK: `jstack`, `jcmd`, `jdump`, `jshell`, etc.
-
-Then you have the same options that you got visually in any IDE: add breakpoints, steps (`next`, `stepi`, `stepo`, `cont`), get variable info, thread information, and much more.
+You can do almost everything: add breakpoints, steps (`next`, `stepi`, `stepo`, `cont`), get variable info, thread information, among other things.
 
 This opens incredible opportunities for your agent to give you much better information when you need to do some debugging.
 
-## Example: checking variables in a request
+Let's see some examples
+
+## Example 1: checking variables in a request
 
 
 For a Java application, you need to start the system with the proper arguments: `java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar app.jar`
 
+For spring-boot application using mvn:
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+```
+
 Then connect by attaching to the port: `jdb -attach 5005`, and that is it.
 
 `jdb` is interactive by design, but in an agentic workflow the session must run hands-off, with the HTTP request firing while the debugger is attached and waiting. The agent constructed this shell script:
-
 
 
 To see the actual ledger records, we need to poke at the ArrayList's internals. The agent assembled another script, this time adding a `next` step and a series of `dump` commands:
@@ -90,9 +94,9 @@ ledgers.content.elementData[0] = {
 ```
 
 
-## A better workflow: TMUX panels
+## A better workflow using Tmux
 
-The pipe-and-background approach works, but there is an even smoother way: TMUX. You can tell the agent to open a new panel or window and send all the debugging commands there while keeping your editor open in the original pane.
+The pipe-and-background approach works, but there is an even smoother way: `tmux` You can tell the agent to open a new panel or window and send all the debugging commands there while keeping your editor open in the original pane.
 
 Here is an example. Without touching a single line of code, I asked the agent to show me the HTTP request headers hitting a controller method. After a few tries, it delivered exactly what I needed:
 
@@ -128,17 +132,18 @@ SecurityContextHolderAwareRequestWrapper
             → headers[0..3]        (MimeHeaderField with nameB/valueB MessageBytes)
 ```
 
-No code changes, no rebuilds, no restart. Just the debugger, the agent, and a TMUX split.
+No code changes, no rebuilds, no restart. Just the debugger, the agent, and a `tmux`
 
 
 ## AI Agentic Debugging
 
 There is no mouseover variable inspection, no inline values, no call-stack tree with expandable frames. But that constraint has its advantages:
 
+* **Agent-friendly.** Text is the universal interface. An AI agent can read jdb output and decide its next command.
 * **Scriptable.** Every jdb session can be captured, replayed, or scripted.
 * **Composable.** jdb fits into pipelines: its output can be parsed by other tools. For example can explain the thread stack.
 * **Remote-friendly.** It works over SSH just as well as locally.
-* **Agent-friendly.** Text is the universal interface. An AI agent can read jdb output and decide its next command.
-
 
 The terminal is the agent's native habitat. Every CLI tool you learn becomes a tool the agent can wield on your behalf. `jdb` is just one example; the same pattern applies to `gdb` for C/C++, `pdb` for Python, `dlv` for Go, or any debugger that exposes a command interface. If you can type it, the agent can use it.
+
+So, did you still prefer hiting the F11 to do the step by step debugging?
