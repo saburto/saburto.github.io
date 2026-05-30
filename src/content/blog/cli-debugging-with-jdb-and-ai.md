@@ -6,13 +6,13 @@ draft: true
 tags: ["debugging", "java", "jdb", "ai", "agentic", "cli"]
 ---
 
-Some times you need to investigate bugs that are very hard to reproduce or understnad the wrong logic, then you have to start deep diving and do debugging. You prepare your breaking point, start checking step by step, variables, stack trace, to understnad what the hell happens! But in Agenti Coding visual debugger are not a good option.
+Sometimes you need to investigate bugs that are hard to reproduce or understand the wrong logic, then you have to start deep diving and do debugging. You prepare your breakpoint, start checking step by step, variables, stack trace, to understand what is happening! But in agentic coding visual debuggers are not a good option.
 
 ![Eclipse IDE suspended at a breakpoint showing the debugging perspective](../../assets/eclipse_suspended_at_breakpoint.webp)
 
 *IDEs and their visual debuggers in the agentic coding era are not an option anymore 🙅 [Eclipse suspended at breakpoint](https://commons.wikimedia.org/wiki/File:Eclipse_suspended_at_breakpoint.png)*
 
-The best next option is to adding some logs as breadcums to try to understand what is happeing
+The best next option is adding some logs as breadcrumbs to try to understand what is happening
 
 ```java
 System.out.println("I am here!!");
@@ -30,9 +30,9 @@ void methodFoo() {
 }
 ```
 
- It's a natural approach, but the feedback loop is very slow in `Java`, because that means you have to compile, package and run again, or the best case a hot-reload, but you do a lot of changes in your code in order to understnad what happens, but you can't put those print in **external classes**.
+ It's a natural approach, but the feedback loop is slow in `Java`, because that means you have to compile, package and run again, or the best case a hot-reload, but you do a lot of changes in your code in order to understand what happens, but you can't put those print statements in **external classes**.
 
-I need something my agent can use, same as I can use a visual debugger.
+I need something my agent can use, the same way I use a visual debugger.
 
 ## JDB: The built-in command-line debugger for Java
 
@@ -138,7 +138,7 @@ The `next` command steps past the `var ledgers = ...` assignment before the dump
 
 Now we see each `LedgerEntity` instance:
 
-```jdb
+```text
 ledgers.content.elementData[0] = {
     id: instance of java.util.UUID(id=15654)
     name: "Basic Transactions Ledger"
@@ -253,15 +253,15 @@ This is what it looks like the final response:
 >
 > From the `ProxyPreparedStatement.<init>` breakpoint on `PgPreparedStatement`:
 >
-> ##### Query 1 &mdash; COUNT (for pagination metadata)
+> ##### Query 1: COUNT (for pagination metadata)
 >
 > ```sql
 > SELECT COUNT(*) FROM "ledger_ledgers"
 > ```
 >
-> *(This was captured in earlier runs &mdash; Spring Data JDBC executes the count first to populate `PageImpl.totalElements`)*
+> *(Earlier runs captured this: Spring Data JDBC executes the count first to populate `PageImpl.totalElements`)*
 >
-> ##### Query 2 &mdash; SELECT data (with LIMIT)
+> ##### Query 2: SELECT data (with LIMIT)
 >
 > ```sql
 > SELECT "ledger_ledgers"."id" AS "id",
@@ -273,7 +273,7 @@ This is what it looks like the final response:
 
 ## Conclusion
 
-Agentic debugging is powerful you can get quaility insights about the execution of your Java sysmten in secondes instead of checking step by step, line by line doing a manually investigation about what is wrong. Good to have those days pass!
+Agentic debugging is powerful you can get quality insights about the execution of your Java system in seconds instead of checking step by step, line by line doing a manual investigation about what is wrong. Those days are behind us!
 
 `jdb` is just for `Java`, the same pattern applies to `gdb` for C/C++, `pdb` for Python, `dlv` for Go, or any debugger that exposes a command interface. If you can use in a terminal, the agent can use it.
 
