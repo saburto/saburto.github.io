@@ -6,13 +6,13 @@ draft: true
 tags: ["debugging", "java", "jdb", "ai", "agentic", "cli"]
 ---
 
+Some times you need to investigate bugs that are very hard to reproduce or understnad the wrong logic, then you have to start deep diving and do debugging. You prepare your breaking point, start checking step by step, variables, stack trace, to understnad what the hell happens! But in Agenti Coding visual debugger are not a good option.
+
 ![Eclipse IDE suspended at a breakpoint showing the debugging perspective](../../assets/eclipse_suspended_at_breakpoint.webp)
 
-*Image: [Eclipse suspended at breakpoint](https://commons.wikimedia.org/wiki/File:Eclipse_suspended_at_breakpoint.png)*
+*IDEs and their visual debuggers in the agentic coding era are not an option anymore 🙅 [Eclipse suspended at breakpoint](https://commons.wikimedia.org/wiki/File:Eclipse_suspended_at_breakpoint.png)*
 
-IDEs and their visual debuggers in the agentic coding era are not an option. 🙅
-
-When I need to investigate a complex issue, the agent normally adds a bunch of `System.out.println`, `print`, or `log.info` statements in order to get more information.
+The best next option is to adding some logs as breadcums to try to understand what is happeing
 
 ```java
 System.out.println("I am here!!");
@@ -25,19 +25,21 @@ void methodFoo() {
 
     if (foo) {
         System.out.println("Enter in the if!!");
+        System.out.println("Foo=" + foo);
     }
 }
 ```
 
- It's a natural approach; many times I did that before. Also that means compiling, packaging, and running again, especially in Java. 🙅
+ It's a natural approach, but the feedback loop is very slow in `Java`, because that means you have to compile, package and run again, or the best case a hot-reload, but you do a lot of changes in your code in order to understnad what happens, but you can't put those print in **external classes**.
 
-I need something my agent can use.
+I need something my agent can use, same as I can use a visual debugger.
 
 ## JDB: The built-in command-line debugger for Java
 
 I decided to give `jdb` a try, the command-line debugger that was always there (since jdk 1).
 
 You can connect to a jvm that is running with the debugger options: `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`:
+This is not only for your own code, also works for any dependency.
 
 - add breakpoints: `stop at com.saburto.Bar:46` or by method `stop at com.saburto.Bar.getAllLedgers`
 - steps: `step`, `step up`,  `stepi`, `next`, `cont`
@@ -45,21 +47,6 @@ You can connect to a jvm that is running with the debugger options: `-agentlib:j
 - threads: `where`, `threadgroups`, `up`, `down`, `kill`, `interrupt`
 - show source code: `use` to add the source code path, `list` to show the code
 
-<<<<<<< HEAD
-This opens incredible opportunities for your agent to give you much better information when you need to do some debugging. Here are a few prompts you can try:
-
-1. **Dump a request payload:** "Attach jdb to my app at port 5005, set a breakpoint at `LedgerController.getAllLedgers`, trigger `curl localhost:8080/api/ledgers`, and dump every field of the `ledgers` Page object — I want to see the actual database records returned."
-
-1. **Trace a variable's mutations:** "Set a breakpoint in `PaymentService.process`, step through line by line with `next`, and dump the `payment` variable after each line. I want to see how the status field changes as it moves through validation, enrichment, and persistence."
-
-1. **Inspect concurrency at a checkpoint:** "Break at the top of my scheduled job in `ReconciliationScheduler.run`, trigger a full thread dump with `where all`, and show me what every other thread is doing at that moment. Any thread blocked on a lock?"
-
-1. **Evaluate an expression in place:** "Set a breakpoint at line 89 of `InvoiceCalculator`, and when it hits, run `eval invoice.getLineItems().stream().mapToDouble(LineItem::getTotal).sum()` — I want to verify the line-item math without adding a log line, rebuilding, and waiting for Maven."
-
-1. **Debug exception state without re-deploying:** "Break inside the catch block of `PaymentGateway.submit` (line 203), send a payment request with a bad card number, and when the breakpoint fires, dump the exception's message, cause chain, and the local variables — I want to see exactly what the gateway rejected and what state the request was in."
-
-These prompts share a common shape: pick a breakpoint, trigger the code path, and let the agent extract the data. The agent handles the timing, the jdb commands, and the output parsing — you get the answer in your terminal.
-=======
 The source code looks clean in the output of the coding agent
 
 ```java
@@ -75,10 +62,6 @@ The source code looks clean in the output of the coding agent
   51        return new PageResponse<>(content, page, size, ledgers.getTotalElements(), ledgers.getTotalPages());
 ```
 
-This is not only for your code, also works for any dependency.
->>>>>>> 3247a39 (add skills an better conventions)
-
-This opens incredible opportunities for your agent to give you much better information when you need to do some debugging. Here are a few prompts you can try:
 
 ### Scenarios
 1. **Dump a request payload**
@@ -103,12 +86,13 @@ This opens incredible opportunities for your agent to give you much better infor
 
 These prompts share a common shape: pick a breakpoint, trigger the code path, and let the agent extract the data. The agent handles the timing, the jdb commands, and the output parsing — you get the answer in your terminal.
 
-## Checking variables in a request
+## Simple examples
 
+### Checking variables in a request
 
 For a Java application, you need to start the system with the proper arguments: `java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar app.jar`
 
-For spring-boot application using mvn:
+For **spring-boot** application using `mvn`:
 
 ```bash
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
@@ -118,7 +102,8 @@ Then connect by attaching to the port: `jdb -attach 5005`, and that is it.
 
 `jdb` is interactive by design, but in an agentic workflow the session must run hands-off, with the HTTP request firing while the debugger is attached and waiting.
 
-IMPORTANT: this is only an example of how my agent generated the script to use the debugger. Depending on your case it may be different; let your agent create the right script.
+> [!WARNING]
+> This is only an example of how my agent generated the script to use the debugger. Depending on your case it may be different; let your agent create the right script.
 
 ```bash
 cd ~/projects/my-app && rm -f /tmp/jdb-output6.txt && (
@@ -163,9 +148,11 @@ ledgers.content.elementData[0] = {
 ```
 
 
-## A better workflow using Tmux
+> [!TIP]
+> Use  **`tmux`**. You can tell the agent to open a new panel or window in **tmux** and send all the debugging commands there while keeping your coding agent open in the original pane.
 
-The pipe-and-background approach works, but there is an even smoother way: `tmux`. You can tell the agent to open a new panel or window and send all the debugging commands there while keeping your editor open in the original pane.
+
+### Printing the Header of the Http Request
 
 Here is an example. Without touching a single line of code, I asked the agent to show me the HTTP request headers hitting a controller method. After a few tries, it delivered exactly what I needed:
 
@@ -187,7 +174,7 @@ Request Headers at LedgerController.getAllLedgers() (line 46, bci=0)
  └───┴───────────────┴─────────────────────────────────────────────────────────────┘
 ```
 
-### How I got there (wrapper chain)
+#### How I got there (wrapper chain)
 
 The request object at `DispatcherServlet.doDispatch` frame 15 goes through 5 nested `.request` fields:
 
@@ -257,16 +244,37 @@ curl → Tomcat → Spring MVC → LedgerController.getAllLedgers()
                                          statement.preparedQuery = the SQL
 ```
 
+#### Final Response
 
-## AI Agentic Debugging
+This is what it looks like the final response:
 
-It lacks mouseover variable inspection, inline values, and expandable call-stack trees. But that constraint has its advantages:
+> [!NOTE]
+> **SQL Queries Executed for `GET /api/v1/ledgers`**
+>
+> From the `ProxyPreparedStatement.<init>` breakpoint on `PgPreparedStatement`:
+>
+> ##### Query 1 &mdash; COUNT (for pagination metadata)
+>
+> ```sql
+> SELECT COUNT(*) FROM "ledger_ledgers"
+> ```
+>
+> *(This was captured in earlier runs &mdash; Spring Data JDBC executes the count first to populate `PageImpl.totalElements`)*
+>
+> ##### Query 2 &mdash; SELECT data (with LIMIT)
+>
+> ```sql
+> SELECT "ledger_ledgers"."id" AS "id",
+>        "ledger_ledgers"."name" AS "name",
+>        "ledger_ledgers"."created_at" AS "created_at"
+> FROM "ledger_ledgers"
+> LIMIT 20
+> ```
 
-* **Agent-friendly.** Text is the universal interface. An AI agent can read jdb output and decide its next command.
-* **Scriptable.** You can capture, replay, or script every jdb session.
-* **Composable.** jdb fits into pipelines: other tools can parse its output to explain thread stacks, for example.
-* **Remote-friendly.** It works over SSH just as well as locally.
+## Conclusion
 
-The terminal is the agent's native habitat. Every CLI tool you learn becomes a tool the agent can wield on your behalf. `jdb` is just one example; the same pattern applies to `gdb` for C/C++, `pdb` for Python, `dlv` for Go, or any debugger that exposes a command interface. If you can type it, the agent can use it.
+Agentic debugging is powerful you can get quaility insights about the execution of your Java sysmten in secondes instead of checking step by step, line by line doing a manually investigation about what is wrong. Good to have those days pass!
 
-So, do you still prefer hitting F11 to step through your code?
+`jdb` is just for `Java`, the same pattern applies to `gdb` for C/C++, `pdb` for Python, `dlv` for Go, or any debugger that exposes a command interface. If you can use in a terminal, the agent can use it.
+
+So, do you still prefer hitting F9, F10, F11 to step through your code?

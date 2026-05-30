@@ -16,6 +16,7 @@
     "@astrojs/rss": "^4.0.12",
     "@shikijs/transformers": "^4.1.0",
     "astro": "^6.3.7",
+    "remark-gh-alerts": "^0.0.3",
     "sharp": "^0.34.2"
   },
   "devDependencies": {
