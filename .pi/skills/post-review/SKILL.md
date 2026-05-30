@@ -24,7 +24,7 @@ Verify optional properties if present:
 
 ### 2. Content and Formatting Checks
 
-- **Typography:** Ensure no double hyphens (`--`) or em dashes (`—`) are used in the text. Suggest rewriting with commas, colons, or other punctuation.
+- **Typography:** Ensure no double hyphens (`--`) or em dashes (`—`) are used in prose text. Suggest rewriting with commas, colons, or other punctuation. Code blocks (triple backtick fences) are exempt — em dashes and double hyphens are fine within code, SQL, shell scripts, and program output.
 - **Passive voice:** Flag passive voice constructions and suggest active voice rewrites. Prefer direct, clear sentences (e.g., "The agent constructed this script" instead of "This script was constructed by the agent").
 - **Positive phrasing:** Flag negative sentence constructions and suggest affirmative rewrites (e.g., "Remember to close the connection" instead of "Don't forget to close the connection").
 - **Filler words and helper verbs:** Flag filler words ("basically", "actually", "just", "really", "very", "quite") and unnecessary helper verbs (e.g., "start to learn" → "learn", "helps to improve" → "improves"). Suggest removing them.

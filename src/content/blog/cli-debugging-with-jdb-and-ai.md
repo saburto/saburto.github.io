@@ -1,12 +1,11 @@
 ---
 title: "Java Command-Line Debugging with AI Agent"
-date: 2026-05-25
+date: 2026-05-30
 description: "Debugging a java application using nothing but jdb and an AI coding agent in the terminal."
-draft: true
 tags: ["debugging", "java", "jdb", "ai", "agentic", "cli"]
 ---
 
-Sometimes you need to investigate bugs that are hard to reproduce or understand the wrong logic, then you have to start deep diving and do debugging. You prepare your breakpoint, start checking step by step, variables, stack trace, to understand what is happening! But in agentic coding visual debuggers are not a good option.
+When you need to track down a complex bug, your first instinct is to reach for a visual debugger. You set a breakpoint, step through the logic, and inspect the stack trace. But in an era of agentic coding, IDEs and visual debuggers are a bottleneck.
 
 ![Eclipse IDE suspended at a breakpoint showing the debugging perspective](../../assets/eclipse_suspended_at_breakpoint.webp)
 
@@ -15,31 +14,36 @@ Sometimes you need to investigate bugs that are hard to reproduce or understand 
 The best next option is adding some logs as breadcrumbs to try to understand what is happening
 
 ```java
-System.out.println("I am here!!");
-
-
-void methodFoo() {
-    System.out.println("Enter in the method foo!!");
-
-    ...
-
-    if (foo) {
-        System.out.println("Enter in the if!!");
-        System.out.println("Foo=" + foo);
+void processPayment() {
+    System.out.println("Entering processPayment()");
+    // ...
+    if (isValid) {
+        System.out.println("Processing valid payment: " + paymentId);
     }
 }
 ```
 
- It's a natural approach, but the feedback loop is slow in `Java`, because that means you have to compile, package and run again, or the best case a hot-reload, but you do a lot of changes in your code in order to understand what happens, but you can't put those print statements in **external classes**.
+It is a natural approach, but the feedback loop is slow in `Java`. Each change means compiling, packaging, and running again, or at best, a hot-reload. You make many code modifications just to understand what happens, but those print statements only work in your own code.
 
 I need something my agent can use, the same way I use a visual debugger.
 
 ## JDB: The built-in command-line debugger for Java
 
-I decided to give `jdb` a try, the command-line debugger that was always there (since jdk 1).
+I gave `jdb` a try, the command-line debugger that was always there (since jdk 1).
 
-You can connect to a jvm that is running with the debugger options: `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`:
-This is not only for your own code, also works for any dependency.
+You can connect to a jvm that is running with the debugger options: 
+
+```bash
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 MyClass
+```
+
+Then you can connect using that port:
+
+```bash
+jdb -attach 5005
+```
+
+This is an interactive tool where you send commands like:
 
 - add breakpoints: `stop at com.saburto.Bar:46` or by method `stop at com.saburto.Bar.getAllLedgers`
 - steps: `step`, `step up`,  `stepi`, `next`, `cont`
@@ -62,11 +66,14 @@ The source code looks clean in the output of the coding agent
   51        return new PageResponse<>(content, page, size, ledgers.getTotalElements(), ledgers.getTotalPages());
 ```
 
+### Let your agent know the tools
+
+Frontier models are intelligent enough to figure out how to call `jdb`, but if you want to lend a hand, create a skill using `man jdb` to document the key commands.
 
 ### Scenarios
 1. **Dump a request payload**
 
-   > Attach jdb to my app at port 5005, set a breakpoint at `LedgerController.getAllLedgers`, trigger `curl localhost:8080/api/ledgers`, and dump every field of the `ledgers` Page object — I want to see the actual database records returned.
+   > Attach jdb to my app at port 5005, set a breakpoint at `LedgerController.getAllLedgers`, trigger `curl localhost:8080/api/ledgers`, and dump every field of the `ledgers` Page object. I want to see the actual database records returned.
 
 2. **Trace a variable's mutations**
 
@@ -78,13 +85,13 @@ The source code looks clean in the output of the coding agent
 
 4. **Evaluate an expression in place**
 
-   > Set a breakpoint at line 89 of `InvoiceCalculator`, and when it hits, run `eval invoice.getLineItems().stream().mapToDouble(LineItem::getTotal).sum()` — I want to verify the line-item math without adding a log line, rebuilding, and waiting for Maven.
+   > Set a breakpoint at line 89 of `InvoiceCalculator`, and when it hits, run `eval invoice.getLineItems().stream().mapToDouble(LineItem::getTotal).sum()`. I want to verify the line-item math without adding a log line, rebuilding, and waiting for Maven.
 
 5. **Debug exception state without re-deploying**
 
-   > Break inside the catch block of `PaymentGateway.submit` (line 203), send a payment request with a bad card number, and when the breakpoint fires, dump the exception's message, cause chain, and the local variables — I want to see exactly what the gateway rejected and what state the request was in.
+   > Break inside the catch block of `PaymentGateway.submit` (line 203), send a payment request with a bad card number, and when the breakpoint fires, dump the exception's message, cause chain, and the local variables. I want to see exactly what the gateway rejected and what state the request was in.
 
-These prompts share a common shape: pick a breakpoint, trigger the code path, and let the agent extract the data. The agent handles the timing, the jdb commands, and the output parsing — you get the answer in your terminal.
+These prompts share a common shape: pick a breakpoint, trigger the code path, and let the agent extract the data. The agent handles the timing, the jdb commands, and the output parsing, and you get the answer in your terminal.
 
 ## Simple examples
 
@@ -95,7 +102,7 @@ For a Java application, you need to start the system with the proper arguments: 
 For **spring-boot** application using `mvn`:
 
 ```bash
-mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"
+mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
 ```
 
 Then connect by attaching to the port: `jdb -attach 5005`, and that is it.
@@ -105,8 +112,10 @@ Then connect by attaching to the port: `jdb -attach 5005`, and that is it.
 > [!WARNING]
 > This is only an example of how my agent generated the script to use the debugger. Depending on your case it may be different; let your agent create the right script.
 
+Because the agent cannot type commands interactively into a debugger prompt, we pipeline the commands through standard input instead:
+
 ```bash
-cd ~/projects/my-app && rm -f /tmp/jdb-output6.txt && (
+cd ~/projects/my-app && rm -f /tmp/jdb-output.txt && (
   echo "stop in com.saburto.ledger.controller.LedgerController.getAllLedgers"
   echo "cont"
   sleep 5
@@ -115,7 +124,7 @@ cd ~/projects/my-app && rm -f /tmp/jdb-output6.txt && (
   echo "dump ledgers.content.elementData"
   echo "dump ledgers.content.elementData[0]"
   sleep 2
-) | timeout 30 jdb -attach 5005 > /tmp/jdb-output6.txt 2>&1 &
+) | timeout 30 jdb -attach 5005 > /tmp/jdb-output.txt 2>&1 &
 JDB_PID=$!
 sleep 2
 curl -s localhost:8080/api/v1/ledgers \
@@ -149,7 +158,7 @@ ledgers.content.elementData[0] = {
 
 
 > [!TIP]
-> Use  **`tmux`**. You can tell the agent to open a new panel or window in **tmux** and send all the debugging commands there while keeping your coding agent open in the original pane.
+> Use **`tmux`** as the bridge between agent and debugger. Tell the agent to open a new panel or window in tmux and send all debugging commands there while keeping your coding agent open in the original pane. This is the pattern we use throughout this post, including the SQL extraction later, to keep the agent and `jdb` running in parallel.
 
 
 ### Printing the Header of the Http Request
@@ -212,7 +221,7 @@ Sometimes you need to dig deeper. I wanted to see the exact SQL that Spring Data
 stop in com.zaxxer.hikari.pool.ProxyPreparedStatement.<init>
 ```
 
-This fires every time a prepared statement is created. The constructor signature includes a statement parameter — the real `PgPreparedStatement` from the PostgreSQL driver.
+This fires every time HikariCP creates a prepared statement. The constructor signature accepts a statement parameter, the real `PgPreparedStatement` from the PostgreSQL driver.
 
 ### Extract the SQL from the driver internals
 
@@ -273,7 +282,7 @@ This is what it looks like the final response:
 
 ## Conclusion
 
-Agentic debugging is powerful you can get quality insights about the execution of your Java system in seconds instead of checking step by step, line by line doing a manual investigation about what is wrong. Those days are behind us!
+Agentic debugging is powerful. You get deep insights into your Java system's state in seconds, entirely hands-off. The days of manually hitting F10 to step through line by line are behind us.
 
 `jdb` is just for `Java`, the same pattern applies to `gdb` for C/C++, `pdb` for Python, `dlv` for Go, or any debugger that exposes a command interface. If you can use in a terminal, the agent can use it.
 
