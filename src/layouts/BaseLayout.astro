@@ -49,18 +49,11 @@ const pageUrl = new URL(Astro.url.pathname, SITE).href;
       rel="stylesheet"
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LM76HVKGTY"></script>
+    <!-- Privacy-friendly analytics by Plausible -->
+    <script async src="https://plausible.io/js/pa-yJXjKCn9yqQI_y4rsCX5R.js"></script>
     <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-LM76HVKGTY', {
-        anonymize_ip: true,
-        client_storage: 'none',
-        allow_google_signals: false,
-        allow_ad_personalization_signals: false
-      });
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
     </script>
     <script is:inline>
       // Apply saved theme before paint to prevent flash
