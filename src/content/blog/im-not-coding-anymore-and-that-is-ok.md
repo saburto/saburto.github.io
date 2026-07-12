@@ -2,7 +2,6 @@
 title: "I'm Not Coding Anymore, and That Is Ok"
 date: 2026-07-12
 description: "How I shifted from writing code to guiding coding agent, and why that's ok"
-draft: true
 tags: [ai, agent, development, llm, software-engineering, productivity, context]
 ---
 
