@@ -3,7 +3,7 @@ title: "I'm Not Coding Anymore, and That Is Ok"
 date: 2026-07-12
 description: ""
 draft: true
-tags: [ai, agent, development]
+tags: [ai, agent, development, llm, software-engineering, productivity, context]
 ---
 
 I am a hands-on software engineer with more than 17 years of experience, and I no longer write code. Yet, I still deliver software on a daily basis. I fix bugs, do analysis, design systems, implement new features, and test my changes.
@@ -26,7 +26,8 @@ The environment where the agent runs is also important. It could be your laptop,
 
 Finally, it needs access to the right tools, MCPs, and skills. If you are working on a backend task, you probably don’t need a Playwright MCP. Try to avoid bloating the context with too many skills; make sure you only enable the right ones for the specific task.
 
-**Tip:** Avoid MCP servers as much as possible and prefer CLI tools. For example, use `playwright-cli`, `jira-cli`, `gh`, `glab`, etc.
+> [!TIP]
+> Avoid MCP servers as much as possible and prefer CLI tools. For example, use `playwright-cli`, `jira-cli`, `gh`, `glab`, etc.
 
 ## From human trust to hard evidence
 
@@ -44,7 +45,8 @@ The last step is doing a retro. Save the important learnings. Maybe there was a 
 
 Good software design, low coupling, high cohesion, high-quality code, and simplicity are still vital. Everything you already know about software engineering is still important. You are the human in charge. You make the decisions. Maybe you don’t craft the code line by line, and maybe you don’t review every single line, but you still need to ensure your output has high quality.
 
-**Warning:** LLMs are not stable yet. Some days you get very good results, but some days—especially right before a new model release—you can't believe how dumb they become. I hope model providers improve transparency about the real status of their services. The key is to have multiple providers ready as backups.
+> [!WARNING]
+> LLMs are not stable yet. Some days you get very good results, but some days—especially right before a new model release—you can't believe how dumb they become. I hope model providers improve transparency about the real status of their services. The key is to have multiple providers ready as backups.
 
 ## Conclusion
 

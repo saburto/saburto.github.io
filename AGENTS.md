@@ -102,6 +102,7 @@ Defined in `src/content.config.ts`:
 - **Prefer positive phrasing.** Frame sentences in the affirmative rather than the negative to improve readability (e.g., "Remember to close the connection" instead of "Don't forget to close the connection").
 - **Avoid filler words and helper verbs.** Cut words that add no meaning (e.g., "basically", "actually", "just", "really", "very", "quite", "rather", "somewhat"). Remove unnecessary helper verbs (e.g., "start to learn" → "learn", "helps to improve" → "improves").
 - **Ensure logical, coherent flow.** Every paragraph and section should follow naturally from the previous one. Use transitions where needed, and check that ideas progress in a clear order rather than jumping between unrelated points.
+- **Use GFM alerts for callouts.** Use `> [!TIP]`, `> [!WARNING]`, `> [!NOTE]`, `> [!IMPORTANT]`, or `> [!CAUTION]` blockquotes instead of bold labels like `**Tip:**` or `**Warning:**`. Each line of the callout body must start with `>`. The CSS theme styles these with colored left borders, icons, and tinted backgrounds that support light/dark/auto.
 - URLs are at `saburto.com/blog/{slug}/` where slug is the filename minus `.md`
 - The home page lists all non-draft posts sorted by date descending (newest first)
 - Theme toggle supports light, dark, and auto (follows system preference)
