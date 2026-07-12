@@ -1,7 +1,7 @@
 ---
 title: "I'm Not Coding Anymore, and That Is Ok"
 date: 2026-07-12
-description: ""
+description: "How I shifted from writing code to guiding coding agent, and why that's ok"
 draft: true
 tags: [ai, agent, development, llm, software-engineering, productivity, context]
 ---
@@ -9,6 +9,10 @@ tags: [ai, agent, development, llm, software-engineering, productivity, context]
 I am a hands-on software engineer with more than 17 years of experience, and I no longer write code. Yet, I still deliver software on a daily basis. I fix bugs, do analysis, design systems, implement new features, and test my changes.
 
 For the actual coding, I have become the guide for my agentic coding tools. My responsibility is to give them the necessary context to make the changes. I define the acceptance criteria using deterministic verification, and I review the evidence to check the completeness and accuracy of the results.
+
+![Guiding the agent tools](../../assets/ai-coding-guide.webp)
+
+*Guiding the agent tool to make the coding*
 
 ## Guiding like a junior programmer, but forever
 
@@ -31,6 +35,10 @@ Finally, it needs access to the right tools, MCPs, and skills. If you are workin
 
 ## From human trust to hard evidence
 
+![Engineer validating evidence](../../assets/verify-evidence.webp)
+
+*Verify everything from LLMs*
+
 You can’t trust LLM results. They are non-deterministic. Even if you give them the perfect context, you can’t assume everything was done following the rules. Mistakes happen, and they will keep happening.
 
 The way you verify the results depends on the context. It can vary from running automated tests and Playwright tests, to looking at screenshots and test results. Maybe you need ad-hoc reports showing the impact of the change in a development environment, or you need to run some manual steps. It changes depending on the nature of the task.
@@ -41,12 +49,18 @@ Later, you need to validate the results live in production, exactly the same way
 
 The last step is doing a retro. Save the important learnings. Maybe there was a common error that should become a new rule or a new deterministic tool to verify next time. This makes your next session faster and more token-cost effective.
 
+![Agent workflow overview](../../assets/agent-flow.webp)
+
+*Overview of a common workflow for a development task*
+
 ## You can't blame the LLMs
 
 Good software design, low coupling, high cohesion, high-quality code, and simplicity are still vital. Everything you already know about software engineering is still important. You are the human in charge. You make the decisions. Maybe you don’t craft the code line by line, and maybe you don’t review every single line, but you still need to ensure your output has high quality.
 
 > [!WARNING]
-> LLMs are not stable yet. Some days you get very good results, but some days—especially right before a new model release—you can't believe how dumb they become. I hope model providers improve transparency about the real status of their services. The key is to have multiple providers ready as backups.
+> LLMs are not stable yet. Some days you get good results, but some days, especially right before a new model release, you can't believe how dumb they become. I hope model providers improve transparency about the real status of their services. The key is to have multiple providers ready as backups.
+
+
 
 ## Conclusion
 
