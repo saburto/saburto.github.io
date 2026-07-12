@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://saburto.dev/sitemap.xml
+Sitemap: https://saburto.com/sitemap.xml

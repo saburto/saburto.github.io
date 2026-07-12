@@ -4,9 +4,18 @@ export async function GET() {
   const posts = (await getCollection('blog')).filter(p => !p.data.draft);
   const SITE = 'https://saburto.com';
 
+  const allTags = [...new Set(posts.flatMap(p => p.data.tags ?? []))];
+
   const urls = [
     { loc: '/', lastmod: new Date().toISOString() },
     { loc: '/about/', lastmod: new Date().toISOString() },
+    { loc: '/tags/', lastmod: new Date().toISOString() },
+    { loc: '/projects/', lastmod: new Date().toISOString() },
+    { loc: '/ai-transparency/', lastmod: new Date().toISOString() },
+    ...allTags.map(tag => ({
+      loc: `/tags/${tag.toLowerCase().replace(/\s+/g, '-')}/`,
+      lastmod: new Date().toISOString(),
+    })),
     ...posts.map(p => ({
       loc: `/blog/${p.id.replace(/\.mdx?$/, '')}/`,
       lastmod: p.data.date.toISOString(),

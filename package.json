@@ -9,18 +9,19 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "playwright test",
-    "test:local": "BASE_URL=http://localhost:4323 playwright test",
+    "test:local": "BASE_URL=http://localhost:4321 playwright test",
     "test:prod": "BASE_URL=https://saburto.com playwright test"
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.12",
+    "@astrojs/markdown-remark": "^7.2.1",
+    "@astrojs/rss": "^4.0.19",
     "@shikijs/transformers": "^4.1.0",
-    "astro": "^6.3.7",
+    "astro": "^7.0.7",
     "remark-gh-alerts": "^0.0.3",
     "sharp": "^0.34.2"
   },
   "devDependencies": {
-    "@earendil-works/pi-coding-agent": "^0.76.0",
+    "@earendil-works/pi-coding-agent": "^0.80.6",
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.1",
     "chokidar": "^5.0.0",
