@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect width="1200" height="4" fill="#2563eb"/>
+  <text x="80" y="340" font-family="'Mona Sans', 'Open Sans', system-ui, sans-serif" font-size="72" font-weight="700" fill="#1a1a1a">Sebastian Aburto</text>
+  <text x="80" y="420" font-family="'Open Sans', system-ui, sans-serif" font-size="36" fill="#6b7280">Software Development Blog</text>
+  <text x="80" y="480" font-family="'Open Sans', system-ui, sans-serif" font-size="22" fill="#9ca3af">Thoughts, ideas, philosophy, and practical tips about software development</text>
+  <rect x="80" y="540" width="40" height="2" rx="1" fill="#2563eb"/>
+  <text x="130" y="548" font-family="'Open Sans', system-ui, sans-serif" font-size="16" fill="#9ca3af">saburto.com</text>
+</svg>
