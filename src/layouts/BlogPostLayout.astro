@@ -18,13 +18,16 @@ const dateStr = post.data.date.toLocaleDateString('en-US', {
 });
 const isoDate = post.data.date.toISOString();
 const updatedIso = post.data.updated?.toISOString();
-const pageUrl = `https://saburto.com/blog/${post.id.replace(/\.mdx?$/, '')}/`;
+const slug = post.id.replace(/\.mdx?$/, '');
+const pageUrl = `https://saburto.com/blog/${slug}/`;
+const ogImage = `https://saburto.com/og/${slug}.png`;
 ---
 
 <BaseLayout
   title={`${post.data.title} - Sebastian Aburto`}
   description={post.data.description}
   ogType="article"
+  ogImage={ogImage}
   articleDate={isoDate}
 >
   <article>
