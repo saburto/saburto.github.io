@@ -40,7 +40,7 @@ test.describe('SEO & metadata', () => {
   test('favicon is linked', async ({ page }) => {
     await page.goto('/');
 
-    const favicon = page.locator('link[rel="icon"]');
+    const favicon = page.locator('link[rel="icon"][type="image/svg+xml"]');
     await expect(favicon).toHaveAttribute('href', '/favicon.svg');
   });
 

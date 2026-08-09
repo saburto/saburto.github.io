@@ -38,7 +38,7 @@ test.describe('blog posts', () => {
 
     await page.goto(href);
 
-    const jsonld = page.locator('script[type="application/ld+json"]');
+    const jsonld = page.locator('main script[type="application/ld+json"]');
     await expect(jsonld).toBeAttached();
 
     const content = await jsonld.textContent();
@@ -74,16 +74,42 @@ test.describe('blog posts', () => {
     }
   });
 
+  test('external links open in a new tab', async ({ page }) => {
+    await page.goto('/');
+
+    // Collect all blog post hrefs first (before navigating)
+    const hrefs = await page.locator('.post-item a').evaluateAll(
+      links => links.map(el => el.getAttribute('href')).filter(Boolean)
+    );
+    let foundExternal = false;
+
+    for (const href of hrefs) {
+      if (!href) continue;
+      await page.goto(href);
+
+      const externalLinks = page.locator('article a[href^="http"]');
+      if ((await externalLinks.count()) > 0) {
+        foundExternal = true;
+        for (const el of await externalLinks.all()) {
+          await expect(el).toHaveAttribute('target', '_blank');
+          await expect(el).toHaveAttribute('rel', /noopener/);
+        }
+      }
+    }
+
+    expect(foundExternal).toBe(true);
+  });
+
   test('code blocks have title bar and copy button', async ({ page }) => {
     await page.goto('/');
 
     // Find a post that might have code (look through all)
-    const postLinks = page.locator('.post-item a');
-    const count = await postLinks.count();
+    const hrefs = await page.locator('.post-item a').evaluateAll(
+      links => links.map(el => el.getAttribute('href')).filter(Boolean)
+    );
     let foundCode = false;
 
-    for (let i = 0; i < count && !foundCode; i++) {
-      const href = await postLinks.nth(i).getAttribute('href');
+    for (const href of hrefs) {
       if (!href) continue;
 
       await page.goto(href);
